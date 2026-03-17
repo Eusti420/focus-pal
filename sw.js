@@ -1,7 +1,7 @@
 const CACHE = 'focuspal-v1';
 
 const FILES = [
-  '/',
+  '/focus-pal/',
   '/index.html',
   '/style.css',
   '/app.js',

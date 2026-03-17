@@ -17,7 +17,7 @@ var S = {
 // ═══════════════════════════════════════════
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/sw.js')
+    navigator.serviceWorker.register('/focus-pal/sw.js')
       .then(function(reg) { console.log('SW registriert:', reg.scope); })
       .catch(function(err) { console.log('SW Fehler:', err); });
   });
@@ -299,12 +299,23 @@ function renderTodos(scope) {
       var xpLbl = t.done ? '🔒' : '+' + XM[t.diff];
       var clickAttr = t.done ? '' : ' onclick="togTodo(' + t.id + ')"';
       var tapCls = t.done ? '' : ' tap';
+
       html += '<div class="tdi' + (t.done ? ' done' : '') + tapCls + '" style="border-left-color:' + CC[t.cat] + ';' + (t.done ? 'cursor:default' : '') + '"' + clickAttr + '>';
       html += '<div class="tdcb">' + (t.done ? '✓' : '') + '</div>';
       html += '<div class="tdc"><div class="tdtx">' + t.text + '</div><div class="tdm">' + metaLbl + '</div></div>';
-      html += '<div class="tdr"><span class="dif ' + diffCls + '">' + diffLbl + '</span><span class="tdx">' + xpLbl + '</span></div>';
+      html += '<div class="tdr">';
+      html += '<span class="dif ' + diffCls + '">' + diffLbl + '</span>';
+      html += '<span class="tdx">' + xpLbl + '</span>';
+      // Edit + Delete – nur wenn nicht erledigt
+      if (!t.done) {
+        html += '<div class="td-actions">';
+        html += '<button class="td-btn td-edit" onclick="editTodo(' + t.id + ');event.stopPropagation()">✏️</button>';
+        html += '<button class="td-btn td-del" onclick="delTodo(' + t.id + ');event.stopPropagation()">✕</button>';
+        html += '</div>';
+      }
       html += '</div>';
-    });
+      html += '</div>';
+});
   });
   el.innerHTML = html;
 }
@@ -320,6 +331,60 @@ function togTodo(id) {
   save();
   renderTodos(curTab);
   updateUI();
+}
+
+function editTodo(id) {
+  var t = null;
+  S.todos.forEach(function(td) { if (td.id === id) t = td; });
+  if (!t) return;
+
+  // Inline-Edit: Formular mit aktuellen Werten vorbelegen
+  document.getElementById('ttxt').value = t.text;
+  document.getElementById('tcat').value = t.cat;
+  document.getElementById('tdif').value = t.diff;
+  document.getElementById('tsc').value = t.scope;
+
+  // Speichern-Button umschalten auf Update-Modus
+  var btn = document.querySelector('.btsv');
+  btn.textContent = '✓ Aktualisieren';
+  btn.onclick = function() { updateTodo(id); };
+
+  // Formular öffnen und scrollen
+  document.getElementById('addf').classList.add('open');
+  document.getElementById('addf').scrollIntoView({ behavior: 'smooth' });
+}
+
+function updateTodo(id) {
+  var tx = document.getElementById('ttxt').value.trim();
+  if (!tx) return;
+
+  S.todos.forEach(function(t) {
+    if (t.id === id) {
+      t.text = tx;
+      t.cat  = document.getElementById('tcat').value;
+      t.diff = document.getElementById('tdif').value;
+      t.scope = document.getElementById('tsc').value;
+      // Kein XP – nur Daten ändern
+    }
+  });
+
+  // Formular zurücksetzen
+  document.getElementById('ttxt').value = '';
+  document.getElementById('addf').classList.remove('open');
+  var btn = document.querySelector('.btsv');
+  btn.textContent = '✓ Speichern';
+  btn.onclick = addTodo;
+
+  save();
+  renderTodos(curTab);
+  showToast('✏️ Aufgabe aktualisiert');
+}
+
+function delTodo(id) {
+  S.todos = S.todos.filter(function(t) { return t.id !== id; });
+  save();
+  renderTodos(curTab);
+  showToast('🗑️ Aufgabe gelöscht');
 }
 
 // ═══════════════════════════════════════════
@@ -669,6 +734,7 @@ function renderRems() {
     h += '<div class="ract">';
     h += '<button class="rbtn rbtog" onclick="togRem(' + r.id + ')">' + (r.active ? '⏸' : '▶') + '</button>';
     h += '<button class="rbtn rbdel" onclick="delRem(' + r.id + ')">✕</button>';
+    h += '<button class="rbtn rbedit" onclick="editRem(' + r.id + ')">✏️</button>';
     h += '</div></div>';
   });
   el.innerHTML = h;
@@ -682,6 +748,48 @@ function togRem(id) {
 function delRem(id) {
   S.reminders = S.reminders.filter(function(r) { return r.id !== id; });
   save(); renderRems();
+}
+
+function editRem(id) {
+  var r = null;
+  S.reminders.forEach(function(rem) { if (rem.id === id) r = rem; });
+  if (!r) return;
+
+  // Formular mit aktuellen Werten vorbelegen
+  document.getElementById('rname').value = r.name;
+  document.getElementById('rico').value  = r.icon;
+  document.getElementById('rtime').value = r.time;
+  document.getElementById('rrep').value  = r.repeat;
+
+  // Speichern-Button auf Update schalten
+  var btn = document.querySelector('.btnrem');
+  btn.textContent = 'Aktualisieren';
+  btn.onclick = function() { updateRem(id); };
+}
+
+function updateRem(id) {
+  var n = document.getElementById('rname').value.trim();
+  var t = document.getElementById('rtime').value;
+  if (!n || !t) { showToast('⚠️ Name und Uhrzeit angeben!'); return; }
+
+  S.reminders.forEach(function(r) {
+    if (r.id === id) {
+      r.name   = n;
+      r.icon   = document.getElementById('rico').value;
+      r.time   = t;
+      r.repeat = document.getElementById('rrep').value;
+      r.lastFired = null; // Reset damit sie neu feuern kann
+    }
+  });
+
+  // Button zurücksetzen
+  var btn = document.querySelector('.btnrem');
+  btn.textContent = 'Speichern';
+  btn.onclick = addRem;
+
+  save();
+  renderRems();
+  showToast('✏️ Erinnerung aktualisiert');
 }
 
 // ═══════════════════════════════════════════

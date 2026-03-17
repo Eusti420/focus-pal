@@ -383,6 +383,36 @@ main {
 .evm { background:rgba(255,217,61,.2); color:var(--a2); }
 .evl { background:rgba(255,107,107,.2); color:var(--a1); }
 
+/* Todo Action Buttons */
+.td-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 3px;
+}
+
+.td-btn {
+  background: none;
+  border: none;
+  font-size: .75rem;
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 5px;
+  opacity: 0.5;
+  transition: opacity .2s;
+  touch-action: manipulation;
+}
+
+.td-btn:active { opacity: 1; }
+
+.td-edit:active { background: rgba(225, 198, 153, .15); }
+.td-del:active  { background: rgba(161, 37, 27, .2); }
+
+/* Reminder edit button */
+.rbedit {
+  background: var(--s3);
+  color: var(--tm);
+}
+
 /* ── NOTIFICATION PANEL ── */
 /* Dimmed backdrop – only covers content below topbar */
 .npanel {

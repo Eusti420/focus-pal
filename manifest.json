@@ -2,11 +2,11 @@
   "name": "FocusPal – ADHS Begleiter",
   "short_name": "FocusPal",
   "description": "Dein persönlicher ADHS-Begleiter mit Aufgaben, Timer und Belohnungssystem",
-  "start_url": "/focuspal/",
-  "scope": "/focuspal/",
+  "start_url": "/focus-pal/",
+  "scope": "/focus-pal/",
   "display": "standalone",
-  "background_color": "#0f0e17",
-  "theme_color": "#0f0e17",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
   "orientation": "portrait",
   "icons": [
     {
