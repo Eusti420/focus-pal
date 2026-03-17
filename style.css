@@ -1,8 +1,20 @@
 /* ── RESET & ROOT ── */
 :root {
-  --bg:#0f0e17; --sur:#1a1926; --s2:#242236; --s3:#2e2b4a;
-  --a1:#ff6b6b; --a2:#ffd93d; --a3:#6bcb77; --a4:#4d96ff; --a5:#c77dff;
-  --tx:#fffffe; --tm:#a7a3c2; --r:16px; --rs:10px;
+  --bg: #0a0a0a;
+  --sur: #141414;
+  --s2: #1e1e1e;
+  --s3: #2a2a2a;
+
+  --a1: #a1251b;      /* Marsrot – Hauptakzent */
+  --a2: #c0392b;      /* Rot etwas heller – Hover/Active */
+  --a3: #6bcb77;      /* Grün bleibt – Erfolg/Done */
+  --a4: #e8e8e8;      /* Hellgrau – sekundärer Text/Icons */
+  --a5: #a1251b;      /* war Lila – jetzt auch Marsrot */
+
+  --tx: #f0f0f0;
+  --tm: #888888;
+  --r: 16px;
+  --rs: 10px;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top: env(safe-area-inset-top, 0px);
 }
@@ -541,7 +553,7 @@ main {
 /* XP POPUP */
 .xpp {
   position:fixed; top:62px; right:12px;
-  background:var(--sur); border:2px solid var(--a2);
+  background:linear-gradient(90deg,var(--a1),var(--a2));
   border-radius:var(--rs); padding:6px 13px;
   font-weight:800; font-size:.9rem; color:var(--a2);
   z-index:200; pointer-events:none;

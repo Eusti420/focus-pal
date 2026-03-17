@@ -13,6 +13,17 @@ var S = {
 };
 
 // ═══════════════════════════════════════════
+// SERVICE WORKER REGISTRATION
+// ═══════════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js')
+      .then(function(reg) { console.log('SW registriert:', reg.scope); })
+      .catch(function(err) { console.log('SW Fehler:', err); });
+  });
+}
+
+// ═══════════════════════════════════════════
 // LEVEL SYSTEM — 50 levels then prestige
 // ═══════════════════════════════════════════
 var MAX_LVL = 50;
