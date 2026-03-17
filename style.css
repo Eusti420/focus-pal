@@ -2,8 +2,8 @@
 :root {
   --bg: #0a0a0a;
   --sur: #141414;
-  --s2: #1e1e1e;
-  --s3: #2a2a2a;
+  --s2: #1a1a1a;
+  --s3: #242424;
 
   --a1: #a1251b;      /* Marsrot – Hauptakzent, Buttons, Alarm */
   --a2: #e1c699;      /* Sandgold – XP, Level, Badges */
@@ -11,7 +11,7 @@
   --a4: #c8c8c8;      /* Hellgrau – sekundäre Elemente */
   --a5: #a1251b;      /* Marsrot – Gradient-Partner */
 
-  --tx: #f0f0f0;
+  --tx: #e1c699;
   --tm: #777777;
   --r: 16px;
   --rs: 10px;
