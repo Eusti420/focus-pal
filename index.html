@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="FocusPal">
+  <meta name="theme-color" content="#0f0e17">
+  <title>FocusPal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js"></script>
+</head>
+<body>
+<canvas id="cvc"></canvas>
+
+<!-- ── ALARM MODAL ── -->
+<div class="alarm-overlay" id="alarmOverlay">
+  <div class="alarm-box">
+    <span class="alarm-icon" id="alarmIcon">⏰</span>
+    <div class="alarm-title" id="alarmTitle">Erinnerung</div>
+    <div class="alarm-body" id="alarmBody">Zeit für deine Erinnerung!</div>
+    <button class="alarm-dismiss" onclick="dismissAlarm()">✓ Alles klar!</button>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<!-- ── ONBOARDING ── -->
+<div id="ob">
+<div class="obc">
+  <div class="obs act" id="s1">
+    <div class="dots"><div class="dot act"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="obt">Hey! 👋 FocusPal</div>
+    <div class="obs2">Dein persönlicher ADHS-Begleiter. Wie heißt du?</div>
+    <input class="ti" id="nmi" type="text" placeholder="Dein Name..." autocomplete="off">
+    <button class="btnp" onclick="ns(1)">Weiter →</button>
+  </div>
+  <div class="obs" id="s2">
+    <div class="dots"><div class="dot"></div><div class="dot act"></div><div class="dot"></div></div>
+    <div class="obt">Wähl deinen Begleiter 🐾</div>
+    <div class="obs2">Er wächst mit dir bis Level 50, dann Prestige!</div>
+    <div class="avgrid">
+      <div class="avo sel" onclick="selAv(this,'🦊','Fuchs')"><span class="ave">🦊</span><div class="avn">Fuchs</div></div>
+      <div class="avo" onclick="selAv(this,'🐼','Panda')"><span class="ave">🐼</span><div class="avn">Panda</div></div>
+      <div class="avo" onclick="selAv(this,'🐶','Hund')"><span class="ave">🐶</span><div class="avn">Hund</div></div>
+      <div class="avo" onclick="selAv(this,'🐱','Katze')"><span class="ave">🐱</span><div class="avn">Katze</div></div>
+      <div class="avo" onclick="selAv(this,'🦝','Rot.Panda')"><span class="ave">🦝</span><div class="avn">Rot.Panda</div></div>
+      <div class="avo" onclick="selAv(this,'🦦','Otter')"><span class="ave">🦦</span><div class="avn">Otter</div></div>
+      <div class="avo" onclick="selAv(this,'🐨','Koala')"><span class="ave">🐨</span><div class="avn">Koala</div></div>
+      <div class="avo" onclick="selAv(this,'🐸','Frosch')"><span class="ave">🐸</span><div class="avn">Frosch</div></div>
+      <div class="avo" onclick="selAv(this,'🦔','Igel')"><span class="ave">🦔</span><div class="avn">Igel</div></div>
+      <div class="avo" onclick="selAv(this,'🐺','Wolf')"><span class="ave">🐺</span><div class="avn">Wolf</div></div>
+      <div class="avo" onclick="selAv(this,'🦁','Löwe')"><span class="ave">🦁</span><div class="avn">Löwe</div></div>
+      <div class="avo" onclick="selAv(this,'🐉','Drache')"><span class="ave">🐉</span><div class="avn">Drache</div></div>
+    </div>
+    <button class="btnp" onclick="ns(2)">Weiter →</button>
+  </div>
+  <div class="obs" id="s3">
+    <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot act"></div></div>
+    <div class="obt">Deine Herausforderungen</div>
+    <div class="obs2">Mehrfachauswahl möglich – ich passe mich an!</div>
+    <div class="fogrid">
+      <div class="foo" onclick="togFoc(this,'start')"><div class="foi">🚀</div><div class="fot">Aufgaben starten</div><div class="fos">Prokrastination</div></div>
+      <div class="foo" onclick="togFoc(this,'time')"><div class="foi">⏰</div><div class="fot">Zeitgefühl</div><div class="fos">Planung</div></div>
+      <div class="foo" onclick="togFoc(this,'emotion')"><div class="foi">🌊</div><div class="fot">Emotionen</div><div class="fos">Impulskontrolle</div></div>
+      <div class="foo" onclick="togFoc(this,'focus')"><div class="foi">🎯</div><div class="fot">Konzentration</div><div class="fos">Fokus halten</div></div>
+    </div>
+    <button class="btnp" onclick="startApp()">🚀 FocusPal starten!</button>
+  </div>
+</div>
+</div>
+
+<!-- ── APP ── -->
+<div id="app">
+
+<div class="topbar">
+  <div class="mav" id="tav">🦊</div>
+  <div class="tinfo">
+    <div class="tname" id="tnm">–</div>
+    <div class="tlvl" id="tlv">Lv.1 • Anfänger</div>
+  </div>
+  <div class="xpw">
+    <div class="xpt"><div class="xpf" id="xpf" style="width:0%"></div></div>
+    <div class="xpl" id="xpl">0/100</div>
+  </div>
+  <div class="sbadge" id="sbd">🔥 0</div>
+  <button class="nbtn" onclick="toggleNP()">🔔<div class="ndot" id="ndot"></div></button>
+</div>
+
+<!-- NOTIFICATION SHEET -->
+<div class="npanel" id="npanel" onclick="npOutside(event)">
+  <div class="npsheet">
+    <div class="nphandle"></div>
+    <div class="nph">
+      <div class="npt2">🔔 Benachrichtigungen</div>
+      <button class="npcl" onclick="toggleNP()">Schließen</button>
+    </div>
+    <div class="nptabs">
+      <button class="nptab act" onclick="switchNTab('rem',this)">⏰ Erinnerungen</button>
+      <button class="nptab" onclick="switchNTab('mot',this)">💪 Motivation</button>
+      <button class="nptab" onclick="switchNTab('inbox',this)">📬 Postfach</button>
+    </div>
+    <div class="npbody">
+      <div id="npt-rem">
+        <div class="remf">
+          <div class="remft">+ Neue Erinnerung</div>
+          <div class="remrow">
+            <input class="remi" id="rname" placeholder="Name (z.B. Medis)" autocomplete="off">
+            <select class="remi" id="rico" style="flex:none">
+              <option value="💊">💊 Medis</option>
+              <option value="🍽️">🍽️ Essen</option>
+              <option value="💧">💧 Wasser</option>
+              <option value="🏃">🏃 Sport</option>
+              <option value="😴">😴 Schlafen</option>
+              <option value="📝">📝 Aufgabe</option>
+              <option value="🧘">🧘 Pause</option>
+            </select>
+          </div>
+          <div class="remrow">
+            <input class="remi" id="rtime" type="time" style="flex:none">
+            <select class="remi" id="rrep" style="flex:none">
+              <option value="daily">Täglich</option>
+              <option value="weekdays">Mo–Fr</option>
+              <option value="weekly">Wöchentlich</option>
+              <option value="once">Einmalig</option>
+            </select>
+          </div>
+          <button class="btnrem" onclick="addRem()">Speichern</button>
+        </div>
+        <div id="remList"></div>
+      </div>
+      <div id="npt-mot" style="display:none">
+        <div class="remf">
+          <div class="remft">💪 Tägliche Motivation</div>
+          <div class="remrow" style="align-items:center">
+            <span style="font-size:.83rem;font-weight:700;flex-shrink:0">Täglich um</span>
+            <input class="remi" id="mottime" type="time" value="09:00" style="flex:none">
+            <button class="btnrem" onclick="saveMotTime()">Speichern</button>
+          </div>
+          <div style="font-size:.76rem;color:var(--tm);margin-top:5px">Dein Begleiter schickt dir täglich eine motivierende Nachricht!</div>
+        </div>
+        <div id="motprev"></div>
+      </div>
+      <div id="npt-inbox" style="display:none">
+        <div id="inboxList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+<!-- DASHBOARD -->
+<div class="sec act" id="sec-home">
+  <div class="avshow">
+    <span class="bigav" id="bav">🦊</span>
+    <div class="avun" id="dname">–</div>
+    <div class="avco" id="dcomp">Dein treuer Begleiter</div>
+    <div class="lvlrow">
+      <div class="lvlpill">⭐ <span id="dlvl">Level 1</span> – <span id="dtit">Anfänger</span></div>
+      <div class="psb" id="psb">✦ <span id="psbn">0</span>× Prestige</div>
+    </div>
+  </div>
+  <div class="srow">
+    <div class="sbox"><div class="sv" style="color:var(--a2)" id="stxp">0</div><div class="sl">XP gesamt</div></div>
+    <div class="sbox"><div class="sv" style="color:var(--a3)" id="stdn">0</div><div class="sl">Erledigt</div></div>
+    <div class="sbox"><div class="sv" style="color:var(--a1)" id="stst">0</div><div class="sl">Streak</div></div>
+  </div>
+  <div class="card">
+    <div class="ct">📅 Tagesfortschritt</div>
+    <div class="dph"><span>Heute</span><span id="dpp">0%</span></div>
+    <div class="dpb"><div class="dpf" id="dpf" style="width:0%"></div></div>
+  </div>
+  <div class="card">
+    <div class="ct">⚡ Quick Wins</div>
+    <div id="qwrap">
+      <div class="qwi" onclick="cqw(this,5)"><div class="qwc"></div><span class="qwt">Glas Wasser trinken</span><span class="qwx">+5 XP</span></div>
+      <div class="qwi" onclick="cqw(this,10)"><div class="qwc"></div><span class="qwt">5 Min Bewegung</span><span class="qwx">+10 XP</span></div>
+      <div class="qwi" onclick="cqw(this,8)"><div class="qwc"></div><span class="qwt">Handy 10 Min weglegen</span><span class="qwx">+8 XP</span></div>
+      <div class="qwi" onclick="cqw(this,15)"><div class="qwc"></div><span class="qwt">Aufgabe starten (2-Min-Regel)</span><span class="qwx">+15 XP</span></div>
+      <div class="qwi" onclick="cqw(this,5)"><div class="qwc"></div><span class="qwt">Box-Atmung (4-4-4-4)</span><span class="qwx">+5 XP</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">⏱️ Fokus-Timer</div>
+    <div class="timw">
+      <div class="timc" id="tc"><div class="timt" id="td">25:00</div><div class="timl" id="tl">Fokus-Phase</div></div>
+      <div class="tbtns">
+        <button class="tbtn2" onclick="setTim(25,'Fokus-Phase')">25 Min</button>
+        <button class="tbtn2" onclick="setTim(5,'Kurze Pause')">5 Min</button>
+        <button class="tbtn2" onclick="setTim(10,'Lange Pause')">10 Min</button>
+        <button class="tbtn2 p" id="tsb" onclick="togTim()">▶ Start</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TODOS -->
+<div class="sec" id="sec-todos">
+  <div class="st">✅ Aufgaben</div>
+  <div class="tsw">
+    <button class="tbtn act" onclick="swTab('day',this)">📅 Heute</button>
+    <button class="tbtn" onclick="swTab('week',this)">🗓️ Woche</button>
+  </div>
+  <button class="bttg" onclick="togAF()">+ Neue Aufgabe</button>
+  <div class="addf" id="addf">
+    <div class="ar"><input class="fi" id="ttxt" placeholder="Aufgabe eingeben..." autocomplete="off"></div>
+    <div class="ar">
+      <select class="fi" id="tcat" style="flex:none">
+        <option value="focus">🎯 Fokus</option>
+        <option value="home">🏠 Zuhause</option>
+        <option value="health">💚 Gesundheit</option>
+        <option value="social">👥 Soziales</option>
+        <option value="work">💼 Arbeit</option>
+      </select>
+      <select class="fi" id="tdif" style="flex:none">
+        <option value="easy">Leicht (+10)</option>
+        <option value="medium">Mittel (+20)</option>
+        <option value="hard">Schwer (+35)</option>
+      </select>
+      <select class="fi" id="tsc" style="flex:none">
+        <option value="day">Heute</option>
+        <option value="week">Woche</option>
+      </select>
+    </div>
+    <button class="btsv" onclick="addTodo()">✓ Speichern</button>
+  </div>
+  <div id="todoList"></div>
+</div>
+
+<!-- ACHIEVEMENTS -->
+<div class="sec" id="sec-ach">
+  <div class="st">🏆 Erfolge</div>
+  <div class="card" style="text-align:center;padding:18px">
+    <div style="font-family:'Fredoka One',cursive;font-size:2.8rem;line-height:1" id="scnum">0</div>
+    <div style="font-size:.74rem;color:var(--tm);font-weight:700;margin:3px 0 10px">GESAMT XP</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <div style="font-size:.86rem;font-weight:800" id="achlv">Level 1 – Anfänger 🌱</div>
+      <div class="psb" id="achpsb">✦ <span id="achpsbn">0</span>× Prestige</div>
+    </div>
+    <div style="height:7px;background:var(--s3);border-radius:3px;overflow:hidden">
+      <div id="achxpb" style="height:100%;background:linear-gradient(90deg,var(--a4),var(--a5));border-radius:3px;width:0%;transition:width .6s ease"></div>
+    </div>
+    <div style="font-size:.7rem;color:var(--tm);margin-top:4px" id="achnxt">100 XP bis nächstes Level</div>
+  </div>
+  <div class="card">
+    <div class="ct">🥇 Abzeichen</div>
+    <div class="achg" id="achg">
+      <div class="ac unlocked"><span class="ai">🌱</span><div class="an">Erster Schritt</div><div class="ad">App gestartet</div></div>
+      <div class="ac locked"><span class="ai">⚡</span><div class="an">Energie-Burst</div><div class="ad">10 Aufgaben erledigt</div></div>
+      <div class="ac locked"><span class="ai">🔥</span><div class="an">On Fire</div><div class="ad">3-Tage Streak</div></div>
+      <div class="ac locked"><span class="ai">💎</span><div class="an">Diamant</div><div class="ad">500 XP gesammelt</div></div>
+      <div class="ac locked"><span class="ai">🎯</span><div class="an">Scharfschütze</div><div class="ad">25 Aufgaben erledigt</div></div>
+      <div class="ac locked"><span class="ai">🏔️</span><div class="an">Gipfelstürmer</div><div class="ad">Level 10 erreicht</div></div>
+      <div class="ac locked"><span class="ai">🌟</span><div class="an">Superstar</div><div class="ad">2000 XP gesammelt</div></div>
+      <div class="ac locked"><span class="ai">✦</span><div class="an">Prestige I</div><div class="ad">Level 50 + Prestige</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">🏅 Meilensteine</div>
+    <div id="mslist"></div>
+  </div>
+  <div class="card">
+    <div class="ct">📜 XP-Verlauf</div>
+    <div class="xlog" id="xlog"><div class="empty">Noch keine XP – leg los! 🚀</div></div>
+  </div>
+</div>
+
+<!-- STRATEGIES -->
+<div class="sec" id="sec-strat">
+  <div class="st">🧠 Strategien</div>
+  <div class="stabs">
+    <button class="stb act" onclick="fstr('all',this)">Alle</button>
+    <button class="stb" onclick="fstr('start',this)">🚀 Starten</button>
+    <button class="stb" onclick="fstr('focus',this)">🎯 Fokus</button>
+    <button class="stb" onclick="fstr('emotion',this)">🌊 Emotion</button>
+    <button class="stb" onclick="fstr('time',this)">⏰ Zeit</button>
+  </div>
+  <div id="stratl">
+    <div class="scc" data-c="start" onclick="tgsc(this)"><div class="sch"><span class="sci">🚀</span><span class="sct">Die 2-Minuten-Regel</span><span class="sca">›</span></div><div class="scb"><p>Wenn eine Aufgabe <strong style="color:var(--tx)">weniger als 2 Minuten</strong> dauert – tu sie sofort.</p><div class="stip">💡 Der Start ist die größte Hürde bei ADHS. Einmal in Bewegung läuft es oft von selbst!</div><ol class="ssl"><li>Aufgabe aufschreiben</li><li>Unter 2 Min? → Sofort tun</li><li>Länger? → In Todo-Liste</li></ol></div></div>
+    <div class="scc" data-c="focus" onclick="tgsc(this)"><div class="sch"><span class="sci">🍅</span><span class="sct">Pomodoro-Technik</span><span class="sca">›</span></div><div class="scb"><p>Arbeite in <strong style="color:var(--tx)">25-Minuten-Blöcken</strong> mit 5-Min-Pausen.</p><div class="stip">💡 Nutze den Fokus-Timer! Nach 4 Pomodoros: 15–30 Min Pause.</div><ol class="ssl"><li>Aufgabe auswählen</li><li>25-Min-Timer starten</li><li>Nur daran arbeiten</li><li>5 Min Pause</li><li>Wiederholen</li></ol></div></div>
+    <div class="scc" data-c="start" onclick="tgsc(this)"><div class="sch"><span class="sci">🐘</span><span class="sct">Den Elefanten aufessen</span><span class="sca">›</span></div><div class="scb"><p>Große Aufgaben in <strong style="color:var(--tx)">kleinste Schritte zerlegen</strong> – jeder Haken gibt Dopamin!</p><div class="stip">💡 „Wie isst man einen Elefanten? Happen für Happen."</div><ol class="ssl"><li>Aufgabe aufschreiben</li><li>Kleinstmöglichen ersten Schritt</li><li>Nur diesen angehen</li><li>Jeden Abschluss feiern</li></ol></div></div>
+    <div class="scc" data-c="emotion" onclick="tgsc(this)"><div class="sch"><span class="sci">🌊</span><span class="sct">TIPP-Technik (DBT)</span><span class="sca">›</span></div><div class="scb"><p>Bei emotionaler Überflutung schnell <strong style="color:var(--tx)">wieder erden</strong>.</p><div class="stip">💡 Verändert die Körperchemie – beruhigt Emotionsstürme in Minuten.</div><ol class="ssl"><li><strong style="color:var(--tx)">T</strong>emperatur: Gesicht in kaltes Wasser</li><li><strong style="color:var(--tx)">I</strong>ntensiv trainieren: 1 Min Burpees</li><li><strong style="color:var(--tx)">P</strong>aced Breathing: 4s ein, 6s aus</li><li><strong style="color:var(--tx)">P</strong>rogr. Muskelentspannung</li></ol></div></div>
+    <div class="scc" data-c="time" onclick="tgsc(this)"><div class="sch"><span class="sci">⏰</span><span class="sct">Time-Boxing</span><span class="sca">›</span></div><div class="scb"><p>Time-Boxing macht Zeit <strong style="color:var(--tx)">sichtbar und konkret</strong>.</p><div class="stip">💡 Ein sichtbarer Timer macht das Wegschmelzen greifbar!</div><ol class="ssl"><li>Tag in 90-Min-Blöcke einteilen</li><li>Jedem Block eine Aufgabe</li><li>20% Pufferzeit einplanen</li><li>5-Min-Vorwarnung nutzen</li></ol></div></div>
+    <div class="scc" data-c="focus" onclick="tgsc(this)"><div class="sch"><span class="sci">🧩</span><span class="sct">Body-Doubling</span><span class="sca">›</span></div><div class="scb"><p>In Anwesenheit anderer aktiviert sich das ADHS-Gehirn durch <strong style="color:var(--tx)">soziale Präsenz</strong> stärker.</p><div class="stip">💡 YouTube „lofi study with me" oder FocusMate.com (kostenlos)!</div><ol class="ssl"><li>Person finden</li><li>Aufgaben kommunizieren</li><li>Parallel in Stille arbeiten</li><li>Check-in danach</li></ol></div></div>
+  </div>
+</div>
+
+<!-- WISSEN -->
+<div class="sec" id="sec-info">
+  <div class="st">📚 Wissen</div>
+  <div class="iacc" onclick="tgac(this)"><div class="iah"><span class="iai">🧠</span><span class="iat">Was ist ADHS?</span><span class="iaa">›</span></div><div class="iab"><p style="margin-bottom:8px">ADHS ist eine neurobiologische Entwicklungsstörung mit Dysregulation des Dopamin- und Noradrenalinsystems. Das ADHS-Gehirn arbeitet anders – nicht schlechter.</p><p><strong style="color:var(--tx)">Drei Typen:</strong><br>• <strong style="color:var(--a4)">Unaufmerksam</strong> – Fokus, Vergessen, Organisation<br>• <strong style="color:var(--a1)">Hyperaktiv-Impulsiv</strong> – Ruhelosigkeit, Impulsivität<br>• <strong style="color:var(--a2)">Kombiniert</strong> – Mischung beider</p></div></div>
+  <div class="iacc" onclick="tgac(this)"><div class="iah"><span class="iai">🔍</span><span class="iat">Symptome & Stärken</span><span class="iaa">›</span></div><div class="iab"><p style="margin-bottom:7px"><strong style="color:var(--tx)">Herausforderungen:</strong></p><span class="tag tf">Konzentration</span><span class="tag tf">Aufgaben starten</span><span class="tag ti2">Impulskontrolle</span><span class="tag th">Innere Unruhe</span><span class="tag te">Emotionsfluten</span><span class="tag tf">Vergesslichkeit</span><span class="tag th">Schlafprobleme</span><span class="tag tf">Zeitblindheit</span><p style="margin:9px 0 6px"><strong style="color:var(--a3)">Stärken:</strong></p><span class="tag" style="background:rgba(107,203,119,.2);color:var(--a3)">Kreativität</span><span class="tag" style="background:rgba(107,203,119,.2);color:var(--a3)">Hyperfokus</span><span class="tag" style="background:rgba(107,203,119,.2);color:var(--a3)">Energie</span><span class="tag" style="background:rgba(107,203,119,.2);color:var(--a3)">Intuition</span><span class="tag" style="background:rgba(107,203,119,.2);color:var(--a3)">Empathie</span></div></div>
+  <div class="iacc" onclick="tgac(this)"><div class="iah"><span class="iai">🍽️</span><span class="iat">Ernährung bei ADHS</span><span class="iaa">›</span></div><div class="iab"><p style="margin-bottom:7px"><strong style="color:var(--a3)">✓ Empfohlen:</strong></p><p style="margin-bottom:8px">Protein zum Frühstück (Eier, Quark, Nüsse), Omega-3 (Lachs, Walnüsse), komplexe Kohlenhydrate (Haferflocken, Linsen), Blaubeeren, Spinat</p><p style="margin-bottom:6px"><strong style="color:var(--a1)">✗ Reduzieren:</strong></p><p>Zucker & Weißmehl, künstliche Farbstoffe, hochverarbeitete Lebensmittel</p><div class="stip" style="background:rgba(107,203,119,.1);border-color:var(--a3);margin-top:8px">💡 Proteinreiches Frühstück macht einen messbaren Unterschied!</div></div></div>
+  <div class="iacc" onclick="tgac(this)"><div class="iah"><span class="iai">💊</span><span class="iat">Supplemente</span><span class="iaa">›</span></div><div class="iab"><p style="margin-bottom:9px;font-size:.76rem;background:rgba(255,107,107,.1);border-radius:7px;padding:6px;color:var(--a1)">⚠️ Immer mit Arzt besprechen!</p><div class="supi"><span class="supic">🐟</span><div><div class="supn">Omega-3 (EPA/DHA)</div><div class="supd">Neurotransmitter & Entzündungshemmung</div><span class="ev evg">Gute Evidenz</span></div></div><div class="supi"><span class="supic">🧲</span><div><div class="supn">Magnesium</div><div class="supd">Schlaf & Nervosität</div><span class="ev evg">Gute Evidenz</span></div></div><div class="supi"><span class="supic">☀️</span><div><div class="supn">Vitamin D3</div><div class="supd">Dopaminproduktion</div><span class="ev evg">Gute Evidenz</span></div></div><div class="supi"><span class="supic">🌿</span><div><div class="supn">Zink</div><div class="supd">Cofaktor für Dopaminsynthese</div><span class="ev evm">Mittlere Evidenz</span></div></div></div></div>
+  <div class="iacc" onclick="tgac(this)"><div class="iah"><span class="iai">😴</span><span class="iat">Schlaf & ADHS</span><span class="iaa">›</span></div><div class="iab"><p style="margin-bottom:8px">~70% aller ADHS-Betroffenen haben Schlafprobleme (verzögerte Melatoninausschüttung).</p><ol class="ssl" style="margin-top:0"><li>Feste Schlafzeiten (auch WE)</li><li>Bildschirme 1h vor Schlaf meiden</li><li>Kühles, dunkles Zimmer</li><li>Melatonin 0,5–1mg – mit Arzt</li><li>Wind-Down-Routine</li></ol></div></div>
+</div>
+
+</main>
+
+<nav>
+  <button class="nb act" onclick="showS('home',this)"><span class="ni">🏠</span>Start</button>
+  <button class="nb" onclick="showS('todos',this)"><span class="ni">✅</span>Aufgaben</button>
+  <button class="nb" onclick="showS('ach',this)"><span class="ni">🏆</span>Erfolge</button>
+  <button class="nb" onclick="showS('strat',this)"><span class="ni">🧠</span>Strategien</button>
+  <button class="nb" onclick="showS('info',this)"><span class="ni">📚</span>Wissen</button>
+</nav>
+</div>
+
+</body>
+
+</html>
