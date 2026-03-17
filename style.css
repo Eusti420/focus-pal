@@ -11,8 +11,8 @@
   --a4: #e8e8e8;      /* Hellgrau – sekundärer Text/Icons */
   --a5: #a1251b;      /* war Lila – jetzt auch Marsrot */
 
-  --tx: #f0f0f0;
-  --tm: #888888;
+  --tx: #ede8df;
+  --tm: #8a8078;
   --r: 16px;
   --rs: 10px;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
