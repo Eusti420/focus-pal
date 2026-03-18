@@ -207,6 +207,8 @@
   </div>
 </div>
 
+
+
 <main>
 
 <!-- DASHBOARD -->
@@ -344,6 +346,7 @@
     <button class="stb" onclick="fstr('focus',this)">🎯 Fokus</button>
     <button class="stb" onclick="fstr('emotion',this)">🌊 Emotion</button>
     <button class="stb" onclick="fstr('time',this)">⏰ Zeit</button>
+    
   </div>
   <div id="stratl">
     <div class="scc" data-c="start" onclick="tgsc(this)"><div class="sch"><span class="sci">🚀</span><span class="sct">Die 2-Minuten-Regel</span><span class="sca">›</span></div><div class="scb"><p>Wenn eine Aufgabe <strong style="color:var(--tx)">weniger als 2 Minuten</strong> dauert – tu sie sofort.</p><div class="stip">💡 Der Start ist die größte Hürde bei ADHS. Einmal in Bewegung läuft es oft von selbst!</div><ol class="ssl"><li>Aufgabe aufschreiben</li><li>Unter 2 Min? → Sofort tun</li><li>Länger? → In Todo-Liste</li></ol></div></div>
@@ -465,9 +468,159 @@
     </div>
   </div>
 
-
+  <!-- SELBSTREFLEXION KATEGORIE -->
+<div class="cq-cat-header" style="border-left-color:var(--a3);margin-top:16px">
+  <span class="cq-cat-icon">🌱</span>
+  <span class="cq-cat-title">Artgerechte Haltung – Selbstreflexion</span>
 </div>
 
+<div class="scc" data-c="reflect" onclick="tgsc(this)">
+  <div class="sch"><span class="sci">💼</span><span class="sct">Arbeit & Konzentration</span><span class="sca">›</span></div>
+  <div class="scb">
+    <p style="margin-bottom:10px;font-size:.82rem;color:var(--tm)">Nimm dir Zeit für diese Fragen – es gibt keine richtigen Antworten. Ziel ist Selbsterkenntnis.</p>
+    <div class="reflect-questions">
+      <div class="rq-item">Arbeite ich lieber alleine oder im Team?</div>
+      <div class="rq-item">Arbeite ich besser in reizarmer oder reizvoller Umgebung?</div>
+      <div class="rq-item">Wie viele Stunden kann ich konzentriert arbeiten?</div>
+      <div class="rq-item">Brauche ich Hilfsmittel? (Noise Cancelling, höhenverstellbarer Tisch, Sitzkissen...)</div>
+      <div class="rq-item">Arbeite ich besser im Homeoffice oder im Büro?</div>
+      <div class="rq-item">Zu welchen Tageszeiten bin ich am produktivsten?</div>
+      <div class="rq-item">Wie viel externe Struktur brauche ich? Lieber selbstständig oder mit klaren Vorgaben?</div>
+    </div>
+    <textarea 
+      id="reflect-work"
+      class="edu-textarea" 
+      style="margin-top:10px" 
+      placeholder="Deine Antworten und Gedanken..." 
+      oninput="saveEduNote('reflect-work')"
+      onclick="event.stopPropagation()"
+      onfocus="event.stopPropagation()"    
+    ></textarea>
+    <button
+      class="edu-save-btn"
+      onclick="saveEduNote('reflect-work');event.stopPropagation()"
+    >
+      ✓ Speichern
+    </button>
+  </div>
+</div>
+
+<div class="scc" data-c="reflect" onclick="tgsc(this)">
+  <div class="sch"><span class="sci">😴</span><span class="sct">Schlaf & Erholung</span><span class="sca">›</span></div>
+  <div class="scb">
+    <div class="reflect-questions">
+      <div class="rq-item">Unter welchen Bedingungen schlafe ich erholsam?</div>
+      <div class="rq-item">Was ist meine optimale Temperatur / Dunkelheit / Geräuschkulisse?</div>
+      <div class="rq-item">Zu welchen Zeiten werde ich natürlicherweise müde?</div>
+      <div class="rq-item">Brauche ich Einschlafhilfen? (Melatonin, Baldrian, Tee, Hörbuch...)</div>
+      <div class="rq-item">Welchen Einfluss haben Bildschirme auf meinen Schlaf?</div>
+      <div class="rq-item">Wie werde ich gut wach? (Licht, Wecker, Musik, Bewegung...)</div>
+    </div>
+    <textarea 
+      id="reflect-sleep"
+      class="edu-textarea" 
+      style="margin-top:10px" 
+      placeholder="Deine Antworten und Gedanken..." 
+      oninput="saveEduNote('reflect-sleep')"
+      onclick="event.stopPropagation()"
+      onfocus="event.stopPropagation()"    
+    ></textarea>
+    <button
+      class="edu-save-btn"
+      onclick="saveEduNote('reflect-sleep');event.stopPropagation()"
+    >
+      ✓ Speichern
+    </button>
+  </div>
+</div>
+
+<div class="scc" data-c="reflect" onclick="tgsc(this)">
+  <div class="sch"><span class="sci">👥</span><span class="sct">Soziales & Beziehungen</span><span class="sca">›</span></div>
+  <div class="scb">
+    <div class="reflect-questions">
+      <div class="rq-item">Wie viel Sozialkontakt tut mir gut – pro Tag / pro Woche?</div>
+      <div class="rq-item">Unter welchen Bedingungen strengt Sozialkontakt mich wenig an?</div>
+      <div class="rq-item">Mit welchen Personen fällt mir Kontakt leichter?</div>
+      <div class="rq-item">Wie viel Zeit brauche ich alleine zur Erholung?</div>
+      <div class="rq-item">Wie kann ich mich freundlich aber klar abgrenzen?</div>
+      <div class="rq-item">Wie offen möchte ich mit meinem ADHS umgehen?</div>
+    </div>
+    <textarea 
+      id="reflect-social"
+      class="edu-textarea" 
+      style="margin-top:10px" 
+      placeholder="Deine Antworten und Gedanken..." 
+      oninput="saveEduNote('reflect-social')"
+      onclick="event.stopPropagation()"
+      onfocus="event.stopPropagation()"    
+    ></textarea>
+    <button
+      class="edu-save-btn"
+      onclick="saveEduNote('reflect-social');event.stopPropagation()"
+    >
+      ✓ Speichern
+    </button>
+  </div>
+</div>
+
+<div class="scc" data-c="reflect" onclick="tgsc(this)">
+  <div class="sch"><span class="sci">🏃</span><span class="sct">Bewegung & Natur</span><span class="sca">›</span></div>
+  <div class="scb">
+    <div class="reflect-questions">
+      <div class="rq-item">Wie viel und welche Bewegung tut mir gut?</div>
+      <div class="rq-item">Ausdauersport oder kurze intensive Belastungen?</div>
+      <div class="rq-item">Drinnen oder draußen?</div>
+      <div class="rq-item">Wie oft sollte ich in die Natur / rausgehen?</div>
+      <div class="rq-item">Was macht das Draußen-Sein mit mir?</div>
+      <div class="rq-item">Wie viel Bewegung am Tag tut mir gut?</div>
+    </div>
+    <textarea 
+      id="reflect-move"
+      class="edu-textarea" 
+      style="margin-top:10px" 
+      placeholder="Deine Antworten und Gedanken..." 
+      oninput="saveEduNote('reflect-move')"
+      onclick="event.stopPropagation()"
+      onfocus="event.stopPropagation()"    
+    ></textarea>
+    <button
+      class="edu-save-btn"
+      onclick="saveEduNote('reflect-move');event.stopPropagation()"
+    >
+      ✓ Speichern
+    </button>
+  </div>
+</div>
+
+<div class="scc" data-c="reflect" onclick="tgsc(this)">
+  <div class="sch"><span class="sci">🏠</span><span class="sct">Struktur, Wohnen & Ordnung</span><span class="sca">›</span></div>
+  <div class="scb">
+    <div class="reflect-questions">
+      <div class="rq-item">Wie viel äußere Struktur ist hilfreich für mich?</div>
+      <div class="rq-item">Welche Routinen empfinde ich als sinnvoll?</div>
+      <div class="rq-item">Wie viel Raum brauche ich für Spontaneität?</div>
+      <div class="rq-item">Welche Strukturierungshilfen nutze ich? (Kalender, Erinnerungen, Deadlines...)</div>
+      <div class="rq-item">Welche Wohnbedingungen wären optimal für mich?</div>
+      <div class="rq-item">Wie viel Ordnung brauche ich wirklich – und wo ist Chaos okay?</div>
+    </div>
+    <textarea 
+      id="reflect_structure"
+      class="edu-textarea" 
+      style="margin-top:10px" 
+      placeholder="Deine Antworten und Gedanken..." 
+      oninput="saveEduNote('reflect_structure')"
+      onclick="event.stopPropagation()"
+      onfocus="event.stopPropagation()"    
+    ></textarea>
+    <button
+      class="edu-save-btn"
+      onclick="saveEduNote('reflect-structure');event.stopPropagation()"
+      >
+      ✓ Speichern
+    </button>
+  </div>
+</div>
+</div>
 
 <!-- WISSEN -->
 <div class="sec" id="sec-info">
@@ -820,6 +973,313 @@
 
 </div>
 
+<!-- PSYCHOEDUKATION -->
+<div class="sec" id="sec-edu">
+  <div class="st">🎓 Psychoedukation</div>
+
+  <!-- INTRO CARD -->
+  <div class="card" style="background:linear-gradient(135deg,var(--s2),var(--s3));position:relative;overflow:hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(161,37,27,.15),transparent 60%);pointer-events:none"></div>
+    <div style="position:relative">
+      <div style="font-size:2.2rem;margin-bottom:8px">🧠</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:1.2rem;margin-bottom:6px">Versteh dein Gehirn</div>
+      <div style="font-size:.83rem;color:var(--tm);line-height:1.65">
+        Psychoedukation bedeutet: verstehen was in dir vorgeht – neurobiologisch, emotional und im Alltag. Wissen schafft Selbstmitgefühl. Selbstmitgefühl schafft Veränderung.
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. WAS BEDEUTET MEINE DIAGNOSE -->
+  <div class="iacc" onclick="tgac(this)">
+    <div class="iah"><span class="iai">🧩</span><span class="iat">Was bedeutet meine Diagnose?</span><span class="iaa">›</span></div>
+    <div class="iab">
+      <p style="margin-bottom:12px">Eine ADHS-Diagnose ist kein Urteil – sie ist eine <strong style="color:var(--tx)">Erklärung</strong>. Viele Menschen berichten, dass die Diagnose ihr Selbstbild grundlegend verändert hat: plötzlich ergibt vieles Sinn, was vorher als persönliches Versagen galt.</p>
+
+      <div style="background:var(--s3);border-radius:var(--rs);padding:14px;margin-bottom:12px">
+        <div style="font-family:'Fredoka One',cursive;font-size:.95rem;margin-bottom:10px;color:var(--a2)">🔄 Neurobiologischer Kreislauf</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="edu-flow-item" style="border-color:var(--a4)">
+            <span class="edu-flow-icon">🧬</span>
+            <div><div class="edu-flow-title">Genetik + Umwelt</div><div class="edu-flow-sub">Mehrere Gene + Lernerfahrungen führen zu strukturellen Hirnveränderungen</div></div>
+          </div>
+          <div style="text-align:center;color:var(--tm);font-size:1.2rem">↓</div>
+          <div class="edu-flow-item" style="border-color:var(--a1)">
+            <span class="edu-flow-icon">⚡</span>
+            <div><div class="edu-flow-title">Weniger Dopamin & Noradrenalin</div><div class="edu-flow-sub">Botenstoffe werden zu schnell wieder aufgenommen – zu wenig im synaptischen Spalt</div></div>
+          </div>
+          <div style="text-align:center;color:var(--tm);font-size:1.2rem">↓</div>
+          <div class="edu-flow-item" style="border-color:var(--a2)">
+            <span class="edu-flow-icon">🎯</span>
+            <div><div class="edu-flow-title">Exekutive Dysfunktion</div><div class="edu-flow-sub">Planung, Impulskontrolle, Emotionsregulation, Zeitgefühl werden schwieriger</div></div>
+          </div>
+          <div style="text-align:center;color:var(--tm);font-size:1.2rem">↓</div>
+          <div class="edu-flow-item" style="border-color:var(--a3)">
+            <span class="edu-flow-icon">💡</span>
+            <div><div class="edu-flow-title">Kompensation & Anpassung</div><div class="edu-flow-sub">Das Gehirn lernt Umwege – oft unbewusst und mit hohem Energieaufwand</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stip">💡 Bei Medikamenteneinnahme lernt das Gehirn besser – neue Verbindungen entstehen (Neuroplastizität). Das Gehirn bleibt veränderbar.</div>
+    </div>
+  </div>
+
+  <!-- 2. MYTHOS VS REALITÄT -->
+  <div class="iacc" onclick="tgac(this)">
+    <div class="iah"><span class="iai">💭</span><span class="iat">Mythen vs. Realität</span><span class="iaa">›</span></div>
+    <div class="iab">
+      <p style="margin-bottom:12px;font-size:.83rem;color:var(--tm)">Viele Menschen mit ADHS haben jahrelang internalisiert was andere über sie gesagt haben. Hier sind die häufigsten Mythen – und was wirklich dahintersteckt.</p>
+
+      <div id="mythList">
+        <div class="myth-card">
+          <div class="myth-header" onclick="togMyth(this)">
+            <span class="myth-icon">❌</span>
+            <span class="myth-title">„Ich bin einfach faul"</span>
+            <span class="myth-arrow">›</span>
+          </div>
+          <div class="myth-body">
+            <div class="myth-reality"><span style="color:var(--a3);font-weight:800">✓ Realität:</span> ADHS ist eine neurologische Störung der Motivation und des Antriebs – nicht der Willenskraft. Das ADHS-Gehirn hat Schwierigkeiten, Dopamin für Aufgaben zu produzieren die nicht sofort belohnend sind. Das ist keine Charakterschwäche.</div>
+          </div>
+        </div>
+        <div class="myth-card">
+          <div class="myth-header" onclick="togMyth(this)">
+            <span class="myth-icon">❌</span>
+            <span class="myth-title">„Ich könnte es wenn ich wollte"</span>
+            <span class="myth-arrow">›</span>
+          </div>
+          <div class="myth-body">
+            <div class="myth-reality"><span style="color:var(--a3);font-weight:800">✓ Realität:</span> Hyperfokus bei interessanten Themen beweist nicht, dass ADHS nur eine Ausrede ist. Es zeigt, dass das Gehirn Dopamin produzieren kann – aber nicht auf Befehl. Der Unterschied liegt in der neurologischen Aktivierungsschwelle.</div>
+          </div>
+        </div>
+        <div class="myth-card">
+          <div class="myth-header" onclick="togMyth(this)">
+            <span class="myth-icon">❌</span>
+            <span class="myth-title">„ADHS haben doch nur Kinder"</span>
+            <span class="myth-arrow">›</span>
+          </div>
+          <div class="myth-body">
+            <div class="myth-reality"><span style="color:var(--a3);font-weight:800">✓ Realität:</span> ADHS ist eine lebenslange neurologische Eigenheit. Bei Erwachsenen verändert sich die Symptomatik – Hyperaktivität wird oft innerlicher, Unaufmerksamkeit und Emotionsregulation bleiben. Viele werden erst im Erwachsenenalter diagnostiziert.</div>
+          </div>
+        </div>
+        <div class="myth-card">
+          <div class="myth-header" onclick="togMyth(this)">
+            <span class="myth-icon">❌</span>
+            <span class="myth-title">„Medikamente verändern die Persönlichkeit"</span>
+            <span class="myth-arrow">›</span>
+          </div>
+          <div class="myth-body">
+            <div class="myth-reality"><span style="color:var(--a3);font-weight:800">✓ Realität:</span> ADHS-Medikamente erhöhen die Verfügbarkeit von Dopamin und Noradrenalin – sie ermöglichen dem Gehirn so zu funktionieren wie es „soll". Viele Betroffene berichten: „Ich bin endlich ich selbst."</div>
+          </div>
+        </div>
+        <div class="myth-card">
+          <div class="myth-header" onclick="togMyth(this)">
+            <span class="myth-icon">❌</span>
+            <span class="myth-title">„Ich bin zu dumm / unfähig"</span>
+            <span class="myth-arrow">›</span>
+          </div>
+          <div class="myth-body">
+            <div class="myth-reality"><span style="color:var(--a3);font-weight:800">✓ Realität:</span> ADHS korreliert nicht mit Intelligenz. Viele hochbegabte Menschen haben ADHS. Das Gehirn arbeitet anders – nicht schlechter. Kreativität, Intuition und Problemlösungsfähigkeit sind oft überdurchschnittlich ausgeprägt.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. MASKING & KOMPENSATION -->
+  <div class="iacc" onclick="tgac(this)">
+    <div class="iah"><span class="iai">🎭</span><span class="iat">Masking & Kompensation verstehen</span><span class="iaa">›</span></div>
+    <div class="iab">
+      <p style="margin-bottom:10px">Masking bedeutet: ADHS-Symptome nach außen verbergen um „normal" zu wirken. Viele tun das seit der Kindheit – so automatisch, dass sie es selbst nicht mehr bemerken.</p>
+      <div class="stip" style="margin-bottom:12px">⚠️ Masking kostet enorm viel Energie. Chronisches Masking kann zu Erschöpfung, Depression und Angststörungen führen.</div>
+
+      <p style="margin-bottom:10px;font-weight:800;font-size:.88rem;color:var(--tx)">Wo maskierst du? (Mehrfachauswahl)</p>
+      <div id="maskingChecks" style="margin-bottom:14px">
+        <div class="edu-check-item" onclick="togEduCheck(this,'mask_1')">
+          <div class="edu-check-box" id="mask_1_box"></div>
+          <div class="edu-check-text">Ich stelle mir bei Gesprächen einen Timer – damit ich nicht zu viel rede</div>
+        </div>
+        <div class="edu-check-item" onclick="togEduCheck(this,'mask_2')">
+          <div class="edu-check-box" id="mask_2_box"></div>
+          <div class="edu-check-text">Ich überkompensiere mit exzessiver Planung und Listen</div>
+        </div>
+        <div class="edu-check-item" onclick="togEduCheck(this,'mask_3')">
+          <div class="edu-check-box" id="mask_3_box"></div>
+          <div class="edu-check-text">Ich bin im Job sehr strukturiert, breche aber zuhause komplett ein</div>
+        </div>
+        <div class="edu-check-item" onclick="togEduCheck(this,'mask_4')">
+          <div class="edu-check-box" id="mask_4_box"></div>
+          <div class="edu-check-text">Ich vermeide Situationen in denen mein ADHS auffallen könnte</div>
+        </div>
+        <div class="edu-check-item" onclick="togEduCheck(this,'mask_5')">
+          <div class="edu-check-box" id="mask_5_box"></div>
+          <div class="edu-check-text">Ich erkläre mein Verhalten mit Ausreden statt mit ADHS</div>
+        </div>
+        <div class="edu-check-item" onclick="togEduCheck(this,'mask_6')">
+          <div class="edu-check-box" id="mask_6_box"></div>
+          <div class="edu-check-text">Ich bin nach sozialen Situationen erschöpft weil ich mich so kontrolliert habe</div>
+        </div>
+        <div class="edu-check-item" onclick="togEduCheck(this,'mask_7')">
+          <div class="edu-check-box" id="mask_7_box"></div>
+          <div class="edu-check-text">Ich stimme zu oder lache mit, auch wenn ich nicht verstanden habe worum es geht</div>
+        </div>
+        <div class="edu-check-item" onclick="togEduCheck(this,'mask_8')">
+          <div class="edu-check-box" id="mask_8_box"></div>
+          <div class="edu-check-text">Ich nehme mir vor, Dinge zu tun und erfinde dann Gründe warum es nicht klappt</div>
+        </div>
+      </div>
+      <div id="maskingResult" style="display:none" class="stip"></div>
+    </div>
+  </div>
+
+  <!-- 4. ENERGIE & AKKU-MODELL -->
+  <div class="iacc" onclick="tgac(this)">
+    <div class="iah"><span class="iai">🔋</span><span class="iat">Energie & das Akku-Modell</span><span class="iaa">›</span></div>
+    <div class="iab">
+      <p style="margin-bottom:12px">ADHS-Betroffene haben oft das Gefühl, schneller leer zu sein als andere. Das ist neurobiologisch erklärbar: Kompensation, Masking und exekutive Dysfunktion verbrauchen enorm viel kognitive Ressourcen.</p>
+
+      <div style="background:var(--s3);border-radius:var(--rs);padding:14px;margin-bottom:12px">
+        <div style="font-family:'Fredoka One',cursive;font-size:.95rem;margin-bottom:12px;color:var(--a2)">🔋 Was entlädt deinen Akku?</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+          <div class="akku-item drain">😤 Soziale Situationen maskieren</div>
+          <div class="akku-item drain">📋 Unstrukturierte Aufgaben</div>
+          <div class="akku-item drain">⏰ Zeitdruck & Deadlines</div>
+          <div class="akku-item drain">🔊 Reizüberflutung</div>
+          <div class="akku-item drain">😴 Schlechter Schlaf</div>
+          <div class="akku-item drain">🍔 Blutzuckerschwankungen</div>
+          <div class="akku-item drain">😰 Emotionale Konflikte</div>
+          <div class="akku-item drain">🔄 Aufgaben wechseln</div>
+        </div>
+        <div style="font-family:'Fredoka One',cursive;font-size:.95rem;margin-bottom:10px;color:var(--a3)">⚡ Was lädt auf?</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="akku-item charge">🏃 Bewegung</div>
+          <div class="akku-item charge">🎯 Hyperfokus-Aktivität</div>
+          <div class="akku-item charge">🌿 Natur & Ruhe</div>
+          <div class="akku-item charge">😴 Guter Schlaf</div>
+          <div class="akku-item charge">🥗 Gute Ernährung</div>
+          <div class="akku-item charge">👥 Sichere Menschen</div>
+          <div class="akku-item charge">🎵 Musik</div>
+          <div class="akku-item charge">✅ Kleine Erfolge</div>
+        </div>
+      </div>
+
+      <p style="font-size:.83rem;color:var(--tm);line-height:1.65">Das Ziel ist nicht, den Akku nie zu leeren – sondern zu lernen <strong style="color:var(--tx)">wann er leer wird und wie du ihn wieder auflädst</strong>. Selbstfürsorge ist keine Schwäche sondern neurobiologische Notwendigkeit.</p>
+    </div>
+  </div>
+
+  <!-- 5. SELBSTMITGEFÜHL & IDENTITÄT -->
+  <div class="iacc" onclick="tgac(this)">
+    <div class="iah"><span class="iai">💚</span><span class="iat">Selbstmitgefühl & Identität</span><span class="iaa">›</span></div>
+    <div class="iab">
+      <p style="margin-bottom:12px">Viele ADHS-Betroffene haben jahrelang negative Glaubenssätze über sich selbst entwickelt – oft aus Rückmeldungen in der Kindheit. Diese Glaubenssätze sitzen tief und beeinflussen das Handeln täglich.</p>
+
+      <p style="margin-bottom:8px;font-weight:800;font-size:.88rem;color:var(--tx)">Typische Glaubenssätze bei ADHS:</p>
+      <div style="margin-bottom:14px">
+        <div class="belief-item old">„Ich bin anders als alle anderen – und das ist schlecht"</div>
+        <div class="belief-item old">„Ich könnte es wenn ich wirklich wollte"</div>
+        <div class="belief-item old">„Ich bin eine Belastung für andere"</div>
+        <div class="belief-item old">„Ich werde das nie in den Griff bekommen"</div>
+        <div class="belief-item old">„Ich bin zu viel"</div>
+      </div>
+
+      <p style="margin-bottom:8px;font-weight:800;font-size:.88rem;color:var(--a3)">Neue Perspektiven:</p>
+      <div style="margin-bottom:14px">
+        <div class="belief-item new">„Mein Gehirn arbeitet anders – das hat Vor- und Nachteile"</div>
+        <div class="belief-item new">„Ich tue was ich kann mit dem was ich habe"</div>
+        <div class="belief-item new">„Ich brauche andere Bedingungen – keine Entschuldigung"</div>
+        <div class="belief-item new">„Mit den richtigen Strategien kann ich vieles erreichen"</div>
+        <div class="belief-item new">„Meine Intensität ist eine Stärke wenn ich sie lenke"</div>
+      </div>
+
+      <p style="margin-bottom:8px;font-weight:800;font-size:.88rem;color:var(--tx)">✏️ Mein eigener Glaubenssatz – neu formuliert:</p>
+      <textarea
+        id="beliefNote"
+        class="edu-textarea"
+        placeholder="Schreib einen alten Glaubenssatz auf – und formuliere ihn neu..."
+        oninput="saveEduNote('beliefNote')"
+        onclick="event.stopPropagation()"
+        onfocus="event.stopPropagation()"
+      ></textarea>
+      <button
+        class="edu-save-btn"
+        onclick="saveEduNote('beliefNote');event.stopPropagation()"
+      >
+        ✓ Speichern
+      </button>
+    </div>
+  </div>
+
+  <!-- 6. MEIN ADHS PROFIL -->
+  <div class="iacc" onclick="tgac(this);renderMyProfile()">
+    <div class="iah"><span class="iai">🗺️</span><span class="iat">Mein persönliches ADHS-Profil</span><span class="iaa">›</span></div>
+    <div class="iab">
+      <p style="margin-bottom:12px;font-size:.83rem;color:var(--tm)">Basierend auf deinen Angaben beim Onboarding und deinen Selbstcheck-Ergebnissen – automatisch für dich zusammengestellt.</p>
+      <div id="myProfileContent">
+        <div class="empty">Öffne diese Karte um dein Profil zu laden...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. MEINE RESSOURCEN -->
+  <div class="iacc" onclick="tgac(this)">
+    <div class="iah"><span class="iai">🌱</span><span class="iat">Meine Ressourcen</span><span class="iaa">›</span></div>
+    <div class="iab">
+      <p style="margin-bottom:12px;font-size:.83rem;color:var(--tm);line-height:1.6">Ressourcen sind alles was dir gut tut und dich stärkt – intern (Fähigkeiten, Charaktereigenschaften) und extern (Menschen, Orte, Aktivitäten). Sich diese bewusst zu machen ist ein wichtiger Schritt.</p>
+
+      <p style="margin-bottom:6px;font-weight:800;font-size:.86rem;color:var(--tx)">💪 Interne Ressourcen</p>
+      <p style="font-size:.78rem;color:var(--tm);margin-bottom:6px">Fähigkeiten, Stärken, Charaktereigenschaften die du (auch durch ADHS) mitbringst</p>
+      <textarea
+        id="resInternal"
+        class="edu-textarea"
+        placeholder="z.B. Kreativität, Empathie, Humor, Begeisterungsfähigkeit, Problemlösung..."
+        oninput="saveEduNote('resInternal')"
+        onclick="event.stopPropagation()"
+        onfocus="event.stopPropagation()"
+      ></textarea>
+      <button
+        class="edu-save-btn"
+        onclick="saveEduNote('resInternal');event.stopPropagation()"
+      >
+        ✓ Speichern
+      </button>
+
+      <p style="margin-bottom:6px;margin-top:14px;font-weight:800;font-size:.86rem;color:var(--tx)">🌍 Externe Ressourcen</p>
+      <p style="font-size:.78rem;color:var(--tm);margin-bottom:6px">Menschen, Orte, Aktivitäten, materielle Sicherheiten die dir Halt geben</p>
+      <textarea
+        id="resExternal"
+        class="edu-textarea"
+        placeholder="z.B. Haustiere, bestimmte Personen, Lieblingsort, Hobbys, Sport..."
+        oninput="saveEduNote('resExternal')"
+        onclick="event.stopPropagation()"
+        onfocus="event.stopPropagation()"
+      ></textarea>
+      <button
+        class="edu-save-btn"
+        onclick="saveEduNote('resExternal');event.stopPropagation()"
+      >
+        ✓ Speichern
+      </button>
+
+      <p style="margin-bottom:6px;margin-top:14px;font-weight:800;font-size:.86rem;color:var(--tx)">✨ Was tut mir gut?</p>
+      <p style="font-size:.78rem;color:var(--tm);margin-bottom:6px">Tätigkeiten die dir gut tun und die du häufiger in deinen Alltag integrieren möchtest</p>
+      <textarea
+        id="resGood"
+        class="edu-textarea"
+        placeholder="z.B. Spazieren gehen, Musik hören, Kochen, Zeit alleine, kreativ sein..."
+        oninput="saveEduNote('resGood')"
+        onclick="event.stopPropagation()"
+        onfocus="event.stopPropagation()"
+      ></textarea>
+      <button
+        class="edu-save-btn"
+        onclick="saveEduNote('resGood');event.stopPropagation()"
+      >
+        ✓ Speichern
+      </button>
+    </div>
+  </div>
+
+</div>
+
 </main>
 
 <nav>
@@ -829,6 +1289,7 @@
   <button class="nb" onclick="showS('strat',this)"><span class="ni">🧠</span>Strategien</button>
   <button class="nb" onclick="showS('info',this)"><span class="ni">📚</span>Wissen</button>
   <button class="nb" onclick="showS('check',this)"><span class="ni">🔎</span>Selbstcheck</button>
+  <button class="nb" onclick="showS('edu',this)"><span class="ni">🎓</span>Psycho&shy;edu</button>
 </nav>
 </div>
 

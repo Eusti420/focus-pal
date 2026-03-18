@@ -359,6 +359,183 @@ main {
 .ssl li:last-child { border:none; }
 .ssl li::before { content:counter(s); position:absolute; left:0; top:6px; width:18px; height:18px; background:var(--a5); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.66rem; font-weight:800; color:#ffffff; }
 
+/* ── PSYCHOEDUKATION ── */
+.edu-flow-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--s2);
+  border-radius: var(--rs);
+  padding: 10px 12px;
+  border-left: 3px solid var(--s3);
+}
+.edu-flow-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 1px; }
+.edu-flow-title { font-weight: 800; font-size: .85rem; margin-bottom: 3px; }
+.edu-flow-sub { font-size: .76rem; color: var(--tm); line-height: 1.5; }
+
+.edu-save-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 6px;
+  margin-left: auto;
+  padding: 6px 14px;
+  background: rgba(161,37,27,.15);
+  border: 1px solid var(--a1);
+  border-radius: 20px;
+  color: var(--a1);
+  font-family: 'Nunito', sans-serif;
+  font-size: .78rem;
+  font-weight: 800;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: all .2s;
+}
+.edu-save-btn:active {
+  background: rgba(161,37,27,.3);
+  transform: scale(.96);
+}
+
+/* Mythen */
+.myth-card {
+  background: var(--s2);
+  border-radius: var(--rs);
+  overflow: hidden;
+  margin-bottom: 8px;
+  border: 2px solid transparent;
+  transition: border-color .2s;
+}
+.myth-card.open { border-color: var(--a3); }
+.myth-header {
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+.myth-icon { font-size: 1.2rem; flex-shrink: 0; }
+.myth-title { flex: 1; font-weight: 800; font-size: .88rem; }
+.myth-arrow { color: var(--tm); font-size: .82rem; transition: transform .2s; }
+.myth-card.open .myth-arrow { transform: rotate(90deg); }
+.myth-body { padding: 0 14px 12px; display: none; }
+.myth-card.open .myth-body { display: block; animation: fi .2s ease; }
+.myth-reality {
+  background: rgba(107,203,119,.08);
+  border-left: 3px solid var(--a3);
+  border-radius: 0 var(--rs) var(--rs) 0;
+  padding: 10px 12px;
+  font-size: .83rem;
+  color: var(--tm);
+  line-height: 1.65;
+}
+
+/* Masking Checks */
+.edu-check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--s3);
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+.edu-check-item:last-child { border-bottom: none; }
+.edu-check-box {
+  width: 20px; height: 20px;
+  border-radius: 5px;
+  border: 2px solid var(--s3);
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .75rem;
+}
+.edu-check-box.checked {
+  background: var(--a1);
+  border-color: var(--a1);
+  color: white;
+}
+.edu-check-text { font-size: .84rem; color: var(--tm); line-height: 1.5; }
+
+/* Akku-Modell */
+.akku-item {
+  border-radius: var(--rs);
+  padding: 7px 10px;
+  font-size: .76rem;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.3;
+}
+.akku-item.drain {
+  background: rgba(161,37,27,.12);
+  color: var(--a1);
+  border: 1px solid rgba(161,37,27,.2);
+}
+.akku-item.charge {
+  background: rgba(107,203,119,.12);
+  color: var(--a3);
+  border: 1px solid rgba(107,203,119,.2);
+}
+
+/* Glaubenssätze */
+.belief-item {
+  padding: 9px 13px;
+  border-radius: var(--rs);
+  font-size: .83rem;
+  margin-bottom: 6px;
+  line-height: 1.5;
+  font-style: italic;
+}
+.belief-item.old {
+  background: rgba(161,37,27,.08);
+  border-left: 3px solid var(--a1);
+  color: var(--tm);
+}
+.belief-item.new {
+  background: rgba(107,203,119,.08);
+  border-left: 3px solid var(--a3);
+  color: var(--tx);
+}
+
+/* Textarea */
+.edu-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px 12px;
+  background: var(--s3);
+  border: 2px solid transparent;
+  border-radius: var(--rs);
+  color: var(--tx);
+  font-family: 'Nunito', sans-serif;
+  font-size: .85rem;
+  line-height: 1.6;
+  outline: none;
+  resize: vertical;
+  transition: border-color .2s;
+}
+.edu-textarea:focus { border-color: var(--a1); }
+
+/* Selbstreflexion Fragen */
+.reflect-questions { margin-bottom: 4px; }
+.rq-item {
+  padding: 7px 0;
+  border-bottom: 1px solid var(--s3);
+  font-size: .83rem;
+  color: var(--tm);
+  line-height: 1.5;
+}
+.rq-item:last-child { border-bottom: none; }
+.rq-item::before {
+  content: '→ ';
+  color: var(--a1);
+  font-weight: 800;
+}
+
 /* WISSEN */
 .iacc { background:var(--s2); border-radius:var(--r); overflow:hidden; margin-bottom:7px; border:2px solid transparent; transition:border-color .2s; }
 .iacc.open { border-color:var(--a5); }

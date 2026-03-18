@@ -911,6 +911,219 @@ function fstr(cat, btn) {
 function tgac(el) { el.classList.toggle('open'); }
 
 // ═══════════════════════════════════════════
+// PSYCHOEDUKATION
+// ═══════════════════════════════════════════
+
+// Mythen aufklappen
+function togMyth(header) {
+  var card = header.parentElement;
+  card.classList.toggle('open');
+}
+
+// Masking Checkboxen
+function togEduCheck(item, key) {
+  var box = document.getElementById(key + '_box');
+  var isChecked = box.classList.contains('checked');
+
+  if (isChecked) {
+    box.classList.remove('checked');
+    box.textContent = '';
+  } else {
+    box.classList.add('checked');
+    box.textContent = '✓';
+  }
+
+  // Speichern
+  if (!S.eduData) S.eduData = {};
+  if (!S.eduData.masking) S.eduData.masking = {};
+  S.eduData.masking[key] = !isChecked;
+  save();
+
+  // Ergebnis anzeigen
+  updateMaskingResult();
+}
+
+function updateMaskingResult() {
+  if (!S.eduData || !S.eduData.masking) return;
+  var count = Object.values(S.eduData.masking).filter(Boolean).length;
+  var result = document.getElementById('maskingResult');
+
+  if (count === 0) {
+    result.style.display = 'none';
+    return;
+  }
+
+  result.style.display = 'block';
+  var msg = '';
+  if (count <= 2) {
+    msg = '✓ Du maskierst in einigen Bereichen. Beobachte bewusst wann und warum – das ist schon ein großer Schritt.';
+  } else if (count <= 5) {
+    msg = '⚡ Du maskierst in vielen Bereichen. Das kostet viel Energie. Überlege wo du dir Masking erlassen kannst.';
+  } else {
+    msg = '🔋 Du maskierst sehr stark. Chronisches Masking ist erschöpfend – Selbstmitgefühl und schrittweise Entlastung sind wichtig.';
+  }
+  result.textContent = msg;
+}
+
+// Notizen speichern
+function saveEduNote(key) {
+  var el = document.getElementById(key);
+  if (!el) return;
+  if (!S.eduData) S.eduData = {};
+  if (!S.eduData.notes) S.eduData.notes = {};
+  S.eduData.notes[key] = el.value;
+  save();
+
+  // Button kurz auf "✓ Gespeichert!" setzen
+  var btn = el.nextElementSibling;
+  if (btn && btn.classList.contains('edu-save-btn')) {
+    var orig = btn.textContent;
+    btn.textContent = '✓ Gespeichert !';
+    btn.style.background = 'rgba(107,203,119,.2)';
+    btn.style.borderColor = 'var(--a3)';
+    btn.style.color = 'var(--a3)';
+    setTimeout(function() {
+      btn.textContent = orig;
+      btn.style.background = '';
+      btn.style.borderColor = '';
+      btn.style.color = '';
+    }, 2000);
+  }
+}
+
+// Notizen laden
+function loadEduNotes() {
+  if (!S.eduData || !S.eduData.notes) return;
+  Object.keys(S.eduData.notes).forEach(function(key) {
+    var el = document.getElementById(key);
+    if (el) el.value = S.eduData.notes[key];
+  });
+}
+
+// Masking Checks laden
+function loadMaskingChecks() {
+  if (!S.eduData || !S.eduData.masking) return;
+  Object.keys(S.eduData.masking).forEach(function(key) {
+    if (S.eduData.masking[key]) {
+      var box = document.getElementById(key + '_box');
+      if (box) {
+        box.classList.add('checked');
+        box.textContent = '✓';
+      }
+    }
+  });
+  updateMaskingResult();
+}
+
+// Mein ADHS-Profil generieren
+function renderMyProfile() {
+  var el = document.getElementById('myProfileContent');
+  if (!el) return;
+
+  var html = '';
+
+  // Problemfelder aus Onboarding
+  var focusLabels = {
+    start:   { icon: '🚀', label: 'Aufgaben starten / Prokrastination' },
+    time:    { icon: '⏰', label: 'Zeitgefühl & Planung' },
+    emotion: { icon: '🌊', label: 'Emotionsregulation' },
+    focus:   { icon: '🎯', label: 'Konzentration & Fokus' }
+  };
+
+  html += '<div style="margin-bottom:14px">';
+  html += '<div style="font-weight:800;font-size:.88rem;margin-bottom:8px">🎯 Deine Herausforderungen</div>';
+  if (S.focuses && S.focuses.length) {
+    S.focuses.forEach(function(f) {
+      var fl = focusLabels[f];
+      if (!fl) return;
+      html += '<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--s3)">';
+      html += '<span style="font-size:1.2rem">' + fl.icon + '</span>';
+      html += '<span style="font-size:.84rem;font-weight:700">' + fl.label + '</span>';
+      html += '</div>';
+    });
+  } else {
+    html += '<div class="empty">Keine Problemfelder aus Onboarding vorhanden</div>';
+  }
+  html += '</div>';
+
+  // Selbstcheck Ergebnis
+  if (S.checkResults && S.checkResults.length) {
+    var latest = S.checkResults[0];
+    html += '<div style="margin-bottom:14px">';
+    html += '<div style="font-weight:800;font-size:.88rem;margin-bottom:8px">🔎 Letzter Selbstcheck (' + latest.date + ')</div>';
+
+    var catIcons2 = {
+      'Unaufmerksamkeit': '🎯',
+      'Hyperaktivität': '⚡',
+      'Impulsivität': '🌊',
+      'Emotionales Erleben': '💭'
+    };
+
+    // Stärkste Bereiche finden
+    var sorted = Object.keys(latest.scores)
+      .filter(function(c) { return c !== 'Verlauf'; })
+      .sort(function(a, b) { return latest.scores[b] - latest.scores[a]; });
+
+    sorted.forEach(function(cat) {
+      var pct   = latest.scores[cat];
+      var level = pct < 30 ? 'low' : pct < 60 ? 'mid' : 'high';
+      var lbl   = pct < 30 ? 'Gering' : pct < 60 ? 'Mittel' : 'Stark';
+      var col   = pct < 30 ? 'var(--a3)' : pct < 60 ? 'var(--a2)' : 'var(--a1)';
+      var icon2 = catIcons2[cat] || '📋';
+
+      html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">';
+      html += '<span>' + icon2 + '</span>';
+      html += '<span style="flex:1;font-size:.82rem;font-weight:700">' + cat + '</span>';
+      html += '<span style="font-size:.75rem;font-weight:800;color:' + col + '">' + lbl + ' (' + pct + '%)</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+
+    // Passende Strategien vorschlagen
+    var topCat = sorted[0];
+    var stratSuggestions = {
+      'Unaufmerksamkeit': ['Pomodoro-Technik', 'Body-Doubling', 'ALPEN-Methode'],
+      'Hyperaktivität':   ['Fokus-Timer nutzen', 'Bewegungspausen einplanen', 'Time-Boxing'],
+      'Impulsivität':     ['Stopp-Technik', 'How to stay on track', '2-Minuten-Regel'],
+      'Emotionales Erleben': ['TIPP-Technik', 'RSD verstehen', 'Selbst-Mitgefühl Pause']
+    };
+
+    if (stratSuggestions[topCat]) {
+      html += '<div style="background:var(--s3);border-radius:var(--rs);padding:12px;margin-bottom:14px">';
+      html += '<div style="font-weight:800;font-size:.85rem;margin-bottom:8px">💡 Passende Strategien für dich</div>';
+      stratSuggestions[topCat].forEach(function(s) {
+        html += '<div style="padding:5px 0;border-bottom:1px solid var(--s2);font-size:.82rem;color:var(--tm)">→ ' + s + '</div>';
+      });
+      html += '</div>';
+    }
+  } else {
+    html += '<div style="background:var(--s2);border-radius:var(--rs);padding:12px;margin-bottom:14px">';
+    html += '<div style="font-size:.83rem;color:var(--tm)">📋 Noch kein Selbstcheck gespeichert – mach den Test um dein Profil zu vervollständigen.</div>';
+    html += '</div>';
+  }
+
+  // Stats
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">';
+  html += '<div style="background:var(--s3);border-radius:var(--rs);padding:12px;text-align:center">';
+  html += '<div style="font-family:\'Fredoka One\',cursive;font-size:1.8rem;color:var(--a2)">' + S.level + '</div>';
+  html += '<div style="font-size:.7rem;color:var(--tm);font-weight:700">Level</div>';
+  html += '</div>';
+  html += '<div style="background:var(--s3);border-radius:var(--rs);padding:12px;text-align:center">';
+  html += '<div style="font-family:\'Fredoka One\',cursive;font-size:1.8rem;color:var(--a3)">' + S.totalDone + '</div>';
+  html += '<div style="font-size:.7rem;color:var(--tm);font-weight:700">Aufgaben erledigt</div>';
+  html += '</div>';
+  html += '</div>';
+
+  el.innerHTML = html;
+}
+
+// Init Psychoedukation
+function initEdu() {
+  loadEduNotes();
+  loadMaskingChecks();
+}
+
+// ═══════════════════════════════════════════
 // TIMER
 // ═══════════════════════════════════════════
 var tSec = 25*60, tRun = false, tLbl = 'Fokus-Phase', tInt = null;
@@ -1846,6 +2059,7 @@ window.addEventListener('load', function() {
     renderTodos('day');
     restoreQWUI();
     renderRems();
+    initEdu();
     renderMilestones();
     renderMotPrev();
     renderInbox();
