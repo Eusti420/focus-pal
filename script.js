@@ -216,16 +216,200 @@ function startApp() {
   addInbox('👋 Willkommen!', 'Hey ' + S.name + '! ' + S.avatar.emoji + ' freut sich auf die Reise mit dir!');
 }
 
+
 // ═══════════════════════════════════════════
-// NAVIGATION
+// NAVIGATION – 4 Haupt-Tabs + Sub-Nav
 // ═══════════════════════════════════════════
-function showS(id, btn) {
-  document.querySelectorAll('.sec').forEach(function(s) { s.classList.remove('act'); });
-  document.querySelectorAll('.nb').forEach(function(b) { b.classList.remove('act'); });
-  document.getElementById('sec-' + id).classList.add('act');
+
+var currentLearnTab = 'strat'; // merkt sich letzten Lernen-Tab
+
+function showMain(id, btn) {
+  // Alle Sections ausblenden
+  document.querySelectorAll('.sec').forEach(function(s) {
+    s.classList.remove('act');
+  });
+
+  // Nav Buttons
+  document.querySelectorAll('.nb').forEach(function(b) {
+    b.classList.remove('act');
+  });
   btn.classList.add('act');
+
+  // Sub-Nav
+  var subnav = document.getElementById('subnav');
+
+  if (id === 'home') {
+    document.getElementById('sec-home').classList.add('act');
+    subnav.style.display = 'none';
+  }
+  else if (id === 'todos') {
+    document.getElementById('sec-todos').classList.add('act');
+    subnav.style.display = 'none';
+    renderTodos(curTab);
+  }
+  else if (id === 'learn') {
+    subnav.style.display = 'flex';
+    // Letzten Lernen-Tab wiederherstellen
+    showLearn(currentLearnTab,
+      document.getElementById('snb-' + currentLearnTab)
+    );
+  }
+  else if (id === 'profile') {
+    document.getElementById('sec-profile').classList.add('act');
+    subnav.style.display = 'none';
+    renderProfile();
+  }
+}
+
+function showLearn(id, btn) {
+  currentLearnTab = id;
+
+  // Alle Sections ausblenden
+  document.querySelectorAll('.sec').forEach(function(s) {
+    s.classList.remove('act');
+  });
+
+  // Sub-Nav Buttons
+  document.querySelectorAll('.snb').forEach(function(b) {
+    b.classList.remove('act');
+  });
+  if (btn) btn.classList.add('act');
+
+  // Section anzeigen
+  document.getElementById('sec-' + id).classList.add('act');
+
+  // Section-spezifische Initialisierung
   if (id === 'ach') updAch();
-  if (id === 'todos') renderTodos(curTab);
+  if (id === 'check') { /* check init */ }
+  if (id === 'edu') { loadEduNotes(); loadMaskingChecks(); }
+}
+
+// Alte showS Funktion – Kompatibilität für bestehende Aufrufe
+function showS(id, btn) {
+  // Mapping alter IDs auf neue Struktur
+  var learnSections = ['strat','info','check','edu','ach'];
+  if (learnSections.indexOf(id) !== -1) {
+    // Lernen-Tab aktivieren
+    document.querySelectorAll('.nb').forEach(function(b) {
+      b.classList.remove('act');
+    });
+    document.getElementById('nb-learn').classList.add('act');
+    document.getElementById('subnav').style.display = 'flex';
+    showLearn(id, document.getElementById('snb-' + id));
+  } else {
+    showMain(id, document.getElementById('nb-' + id) || btn);
+  }
+}
+
+// ═══════════════════════════════════════════
+// PROFIL
+// ═══════════════════════════════════════════
+
+function renderProfile() {
+  document.getElementById('profileAvatar').textContent = S.avatar.emoji;
+  document.getElementById('profileName').textContent = S.name;
+  document.getElementById('profileLevel').textContent =
+    'Level ' + S.level + ' – ' + getTitle(S.level) + ' ' + getEmoji(S.level);
+  document.getElementById('profileXP').textContent = S.xp;
+  document.getElementById('profileDone').textContent = S.totalDone;
+  document.getElementById('profileStreak').textContent = S.streak;
+
+  // Aktiven Avatar markieren
+  document.querySelectorAll('#profileAvGrid .avo').forEach(function(el) {
+    el.classList.remove('sel');
+    if (el.querySelector('.ave').textContent === S.avatar.emoji) {
+      el.classList.add('sel');
+    }
+  });
+
+  document.getElementById('profileNameInput').value = '';
+}
+
+function changeAvatar(el, emoji, name) {
+  document.querySelectorAll('#profileAvGrid .avo').forEach(function(a) {
+    a.classList.remove('sel');
+  });
+  el.classList.add('sel');
+  S.avatar = { emoji: emoji, name: name };
+  save();
+  updateUI();
+  renderProfile();
+  showToast('Avatar geändert zu ' + emoji);
+}
+
+function validateNameInput(input) {
+  var val = input.value.trim();
+  var btn  = document.getElementById('nameSubmitBtn');
+  var hint = document.getElementById('nameInputHint');
+  var len  = val.length;
+
+  if (len < 2) {
+    btn.classList.remove('btn-save-valid');
+    btn.classList.add('btn-save-invalid');
+    btn.disabled = true;
+    hint.textContent = len === 0
+      ? '2–20 Zeichen'
+      : 'Noch ' + (2 - len) + ' Zeichen nötig';
+    hint.style.color = 'var(--a1)';
+  } else if (len > 20) {
+    btn.classList.remove('btn-save-valid');
+    btn.classList.add('btn-save-invalid');
+    btn.disabled = true;
+    hint.textContent = 'Maximal 20 Zeichen (' + len + '/20)';
+    hint.style.color = 'var(--a1)';
+  } else {
+    btn.classList.remove('btn-save-invalid');
+    btn.classList.add('btn-save-valid');
+    btn.disabled = false;
+    hint.textContent = len + '/20 Zeichen ✓';
+    hint.style.color = 'var(--a3)';
+  }
+}
+
+function changeName() {
+  var val = document.getElementById('profileNameInput').value.trim();
+  if (!val || val.length < 2 || val.length > 20) return;
+
+  S.name = val;
+  save();
+  updateUI();
+  renderProfile();
+
+  // Reset Input + Button
+  var input = document.getElementById('profileNameInput');
+  var btn   = document.getElementById('nameSubmitBtn');
+  var hint  = document.getElementById('nameInputHint');
+
+  input.value = '';
+  btn.classList.remove('btn-save-valid');
+  btn.classList.add('btn-save-invalid');
+  btn.disabled = true;
+  hint.textContent = '2–20 Zeichen';
+  hint.style.color = 'var(--tm)';
+
+  showToast('✓ Name geändert zu ' + S.name);
+}
+
+function confirmReset() {
+  showAlarm(
+    '⚠️',
+    'App zurücksetzen?',
+    'Alle Daten werden gelöscht. Das kann nicht rückgängig gemacht werden!'
+  );
+  // Dismiss-Button überschreiben
+  var btn = document.querySelector('.alarm-dismiss');
+  btn.textContent = '✓ Ja, alles löschen';
+  btn.onclick = function() {
+    localStorage.removeItem('fp4');
+    location.reload();
+  };
+
+  // Abbrechen-Button hinzufügen
+  var cancelBtn = document.createElement('button');
+  cancelBtn.textContent = 'Abbrechen';
+  cancelBtn.style.cssText = 'width:100%;padding:11px;background:none;border:2px solid var(--s3);border-radius:var(--rs);color:var(--tm);font-family:Nunito,sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;margin-top:8px';
+  cancelBtn.onclick = dismissAlarm;
+  btn.parentNode.appendChild(cancelBtn);
 }
 
 // ═══════════════════════════════════════════
@@ -682,6 +866,10 @@ function checkMSRewards(lvl) {
 function updateUI() {
   var t = getTitle(S.level);
   var e = getEmoji(S.level);
+  var nbProfile = document.getElementById('nb-profile');
+  if (nbProfile) {
+    nbProfile.querySelector('.ni').textContent = S.avatar.emoji;
+  }
   document.getElementById('tav').textContent = S.avatar.emoji;
   document.getElementById('tnm').textContent = S.name;
   document.getElementById('tlv').textContent = 'Lv.' + S.level + ' • ' + t;
@@ -701,6 +889,11 @@ function updateUI() {
 
   updXPBar();
   updDP();
+}
+
+function goToProfile() {
+  var btn = document.getElementById('nb-profile');
+  showMain('profile', btn);
 }
 
 function updDP() {

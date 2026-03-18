@@ -76,7 +76,7 @@
       <div class="avo" onclick="selAv(this,'🐼','Panda')"><span class="ave">🐼</span><div class="avn">Panda</div></div>
       <div class="avo" onclick="selAv(this,'🐶','Hund')"><span class="ave">🐶</span><div class="avn">Hund</div></div>
       <div class="avo" onclick="selAv(this,'🐱','Katze')"><span class="ave">🐱</span><div class="avn">Katze</div></div>
-      <div class="avo" onclick="selAv(this,'🦝','Rot.Panda')"><span class="ave">🦝</span><div class="avn">Rot.Panda</div></div>
+      <div class="avo" onclick="selAv(this,'🦝','Waschbär')"><span class="ave">🦝</span><div class="avn">Waschbär</div></div>
       <div class="avo" onclick="selAv(this,'🦦','Otter')"><span class="ave">🦦</span><div class="avn">Otter</div></div>
       <div class="avo" onclick="selAv(this,'🐨','Koala')"><span class="ave">🐨</span><div class="avn">Koala</div></div>
       <div class="avo" onclick="selAv(this,'🐸','Frosch')"><span class="ave">🐸</span><div class="avn">Frosch</div></div>
@@ -106,7 +106,7 @@
 <div id="app">
 
 <div class="topbar">
-  <div class="mav" id="tav">🦊</div>
+  <div class="mav" id="tav" onclick="goToProfile()" style="cursor:pointer" title="Profil öffnen">🦊</div>
   <div class="tinfo">
     <div class="tname" id="tnm">–</div>
     <div class="tlvl" id="tlv">Lv.1 • Anfänger</div>
@@ -117,6 +117,24 @@
   </div>
   <div class="sbadge" id="sbd">🔥 0</div>
   <button class="nbtn" onclick="toggleNP()">🔔<div class="ndot" id="ndot"></div></button>
+</div>
+<!-- SUB-NAV (nur sichtbar wenn Lernen aktiv) -->
+<div class="subnav" id="subnav" style="display:none">
+  <button class="snb act" id="snb-strat" onclick="showLearn('strat',this)">
+    🧠 Strategien
+  </button>
+  <button class="snb" id="snb-info" onclick="showLearn('info',this)">
+    📚 Wissen
+  </button>
+  <button class="snb" id="snb-ach" onclick="showLearn('ach',this)">
+    🏆 Erfolge
+  </button>
+  <button class="snb" id="snb-check" onclick="showLearn('check',this)">
+    🔎 Selbstcheck
+  </button>
+  <button class="snb" id="snb-edu" onclick="showLearn('edu',this)">
+    🎓 Psychoedu
+  </button>
 </div>
 
 <!-- NOTIFICATION SHEET -->
@@ -206,8 +224,6 @@
     </div>
   </div>
 </div>
-
-
 
 <main>
 
@@ -1280,16 +1296,118 @@
 
 </div>
 
+<!-- PROFIL -->
+<div class="sec" id="sec-profile">
+  <div class="st">👤 Profil</div>
+
+  <!-- AVATAR & NAME -->
+  <div class="card" style="text-align:center;padding:24px">
+    <span style="font-size:4rem;display:block;margin-bottom:10px" id="profileAvatar">🦊</span>
+    <div style="font-family:'Fredoka One',cursive;font-size:1.6rem" id="profileName">–</div>
+    <div style="font-size:.82rem;color:var(--tm);margin-top:4px" id="profileLevel">Level 1 – Anfänger</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="card">
+    <div class="ct">📊 Meine Statistiken</div>
+    <div class="srow">
+      <div class="sbox">
+        <div class="sv" style="color:var(--a2)" id="profileXP">0</div>
+        <div class="sl">Gesamt XP</div>
+      </div>
+      <div class="sbox">
+        <div class="sv" style="color:var(--a3)" id="profileDone">0</div>
+        <div class="sl">Erledigt</div>
+      </div>
+      <div class="sbox">
+        <div class="sv" style="color:var(--a1)" id="profileStreak">0</div>
+        <div class="sl">Streak</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EINSTELLUNGEN -->
+  <div class="card">
+    <div class="ct">⚙️ Einstellungen</div>
+
+    <div style="margin-bottom:14px">
+      <div style="font-size:.82rem;font-weight:800;margin-bottom:8px;color:var(--tx)">
+        Avatar ändern
+      </div>
+      <div class="avgrid" id="profileAvGrid">
+        <div class="avo" onclick="changeAvatar(this,'🦊','Fuchs')"><span class="ave">🦊</span><div class="avn">Fuchs</div></div>
+        <div class="avo" onclick="changeAvatar(this,'🐼','Panda')"><span class="ave">🐼</span><div class="avn">Panda</div></div>
+        <div class="avo" onclick="changeAvatar(this,'🐶','Hund')"><span class="ave">🐶</span><div class="avn">Hund</div></div>
+        <div class="avo" onclick="changeAvatar(this,'🐱','Katze')"><span class="ave">🐱</span><div class="avn">Katze</div></div>
+        <div class="avo" onclick="changeAvatar(this,'🦝','Waschbär')"><span class="ave">🦝</span><div class="avn">Waschbär</div></div>
+        <div class="avo" onclick="changeAvatar(this,'🦦','Otter')"><span class="ave">🦦</span><div class="avn">Otter</div></div>
+        <div class="avo" onclick="changeAvatar(this,'🐨','Koala')"><span class="ave">🐨</span><div class="avn">Koala</div></div>
+        <div class="avo" onclick="changeAvatar(this,'🐸','Frosch')"><span class="ave">🐸</span><div class="avn">Frosch</div></div>
+        <div class="avo" onclick="changeAvatar(this,'🦔','Igel')"><span class="ave">🦔</span><div class="avn">Igel</div></div>
+        <div class="avo" onclick="changeAvatar(this,'🐺','Wolf')"><span class="ave">🐺</span><div class="avn">Wolf</div></div>
+        <div class="avo" onclick="changeAvatar(this,'🦁','Löwe')"><span class="ave">🦁</span><div class="avn">Löwe</div></div>
+        <div class="avo" onclick="changeAvatar(this,'🐉','Drache')"><span class="ave">🐉</span><div class="avn">Drache</div></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px">
+      <input 
+        class="fi" 
+        id="profileNameInput" 
+        type="text" 
+        placeholder="Neuer Name..."
+        minlength="2"
+        maxlength="20"
+        oninput="validateNameInput(this)"
+        autocomplete="off"
+      >
+      <button 
+        class="btn-save btn-save-invalid" 
+        id="nameSubmitBtn"
+        onclick="changeName()"
+        disabled
+      >✓</button>
+    </div>
+    <div style="font-size:.7rem;color:var(--tm);margin-top:4px" id="nameInputHint">
+      2–20 Zeichen
+    </div>
+  </div>
+
+  <!-- DATEN -->
+  <div class="card">
+    <div class="ct">💾 Daten & Backup</div>
+
+    <div style="background:var(--s2);border-radius:var(--rs);padding:14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start">
+      <span style="font-size:1.4rem;flex-shrink:0">☁️</span>
+      <div>
+        <div style="font-size:.85rem;font-weight:800;margin-bottom:4px">Cloud-Sync kommt bald</div>
+        <div style="font-size:.78rem;color:var(--tm);line-height:1.6">
+          Deine Daten werden aktuell lokal auf diesem Gerät gespeichert. Mit dem nächsten Update kannst du dein Konto geräteübergreifend synchronisieren.
+        </div>
+      </div>
+    </div>
+
+  <button onclick="confirmReset()" style="width:100%;padding:11px;background:rgba(161,37,27,.1);border:1px solid var(--a1);border-radius:var(--rs);color:var(--a1);font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;cursor:pointer">
+    🗑️ App zurücksetzen
+  </button>
+</div>
+
+</div>
 </main>
 
 <nav>
-  <button class="nb act" onclick="showS('home',this)"><span class="ni">🏠</span>Start</button>
-  <button class="nb" onclick="showS('todos',this)"><span class="ni">✅</span>Aufgaben</button>
-  <button class="nb" onclick="showS('ach',this)"><span class="ni">🏆</span>Erfolge</button>
-  <button class="nb" onclick="showS('strat',this)"><span class="ni">🧠</span>Strategien</button>
-  <button class="nb" onclick="showS('info',this)"><span class="ni">📚</span>Wissen</button>
-  <button class="nb" onclick="showS('check',this)"><span class="ni">🔎</span>Selbstcheck</button>
-  <button class="nb" onclick="showS('edu',this)"><span class="ni">🎓</span>Psycho&shy;edu</button>
+  <button class="nb act" id="nb-home" onclick="showMain('home',this)">
+    <span class="ni">🏠</span>Start
+  </button>
+  <button class="nb" id="nb-todos" onclick="showMain('todos',this)">
+    <span class="ni">✅</span>Aufgaben
+  </button>
+  <button class="nb" id="nb-learn" onclick="showMain('learn',this)">
+    <span class="ni">🧠</span>Lernen
+  </button>
+  <button class="nb" id="nb-profile" onclick="showMain('profile',this)">
+    <span class="ni">👤</span>Profil
+  </button>
 </nav>
 </div>
 
