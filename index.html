@@ -294,8 +294,7 @@
     <div class="scc" data-c="time" onclick="tgsc(this)"><div class="sch"><span class="sci">⏰</span><span class="sct">Time-Boxing</span><span class="sca">›</span></div><div class="scb"><p>Time-Boxing macht Zeit <strong style="color:var(--tx)">sichtbar und konkret</strong>.</p><div class="stip">💡 Ein sichtbarer Timer macht das Wegschmelzen greifbar!</div><ol class="ssl"><li>Tag in 90-Min-Blöcke einteilen</li><li>Jedem Block eine Aufgabe</li><li>20% Pufferzeit einplanen</li><li>5-Min-Vorwarnung nutzen</li></ol></div></div>
     <div class="scc" data-c="focus" onclick="tgsc(this)"><div class="sch"><span class="sci">🧩</span><span class="sct">Body-Doubling</span><span class="sca">›</span></div><div class="scb"><p>In Anwesenheit anderer aktiviert sich das ADHS-Gehirn durch <strong style="color:var(--tx)">soziale Präsenz</strong> stärker.</p><div class="stip">💡 YouTube „lofi study with me" oder FocusMate.com (kostenlos)!</div><ol class="ssl"><li>Person finden</li><li>Aufgaben kommunizieren</li><li>Parallel in Stille arbeiten</li><li>Check-in danach</li></ol></div></div>
   </div>
-</div>
- <div class="scc" data-c="start" onclick="tgsc(this)">
+   <div class="scc" data-c="start" onclick="tgsc(this)">
     <div class="sch"><span class="sci">🏔️</span><span class="sct">Die ALPEN-Methode</span><span class="sca">›</span></div>
     <div class="scb">
       <p>Mit der ALPEN-Methode sammelst du alle zu erledigenden Aufgaben und organisierst dich strukturiert. Besonders hilfreich bei größeren Projekten oder komplexen Wochen.</p>
@@ -407,7 +406,9 @@
     </div>
   </div>
 
+
 </div>
+
 
 <!-- WISSEN -->
 <div class="sec" id="sec-info">
@@ -616,6 +617,124 @@
     </div>
   </div>
 
+  
+
+</div>
+
+<!-- SELBSTCHECK -->
+<div class="sec" id="sec-check">
+  <div class="st">🔎 Selbstcheck</div>
+
+  <!-- DISCLAIMER -->
+  <div class="card" style="border-left:3px solid var(--a1)">
+    <div class="ct">⚠️ Wichtiger Hinweis</div>
+    <p style="font-size:.85rem;color:var(--tm);line-height:1.7;margin-bottom:10px">
+      Dieser Selbstcheck ist <strong style="color:var(--tx)">kein medizinisches Diagnosewerkzeug</strong> und ersetzt keine professionelle psychiatrische oder psychologische Diagnostik. Er dient ausschließlich zur persönlichen Selbstreflexion.
+    </p>
+    <p style="font-size:.85rem;color:var(--tm);line-height:1.7">
+      Die Ergebnisse können dir helfen einzuschätzen, ob eine professionelle Abklärung sinnvoll sein könnte. Eine ADHS-Diagnose kann nur durch qualifizierte Fachpersonen gestellt werden.
+    </p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="card" id="checkProgressCard" style="display:none">
+    <div class="dph">
+      <span id="checkProgressLabel">Fortschritt</span>
+      <span id="checkProgressPct">0%</span>
+    </div>
+    <div class="dpb"><div class="dpf" id="checkProgressBar" style="width:0%"></div></div>
+  </div>
+
+  <!-- TEIL 1 -->
+  <div id="checkPart1">
+    <div class="card">
+      <div class="ct">📋 Teil 1 – Aktuelles Erleben</div>
+      <p style="font-size:.83rem;color:var(--tm);line-height:1.6;margin-bottom:12px">
+        Die folgenden Aussagen beschreiben deine Situation, <strong style="color:var(--tx)">wie sie sich gewöhnlich darstellt</strong>. Bewerte jede Aussage ehrlich.
+      </p>
+      <div class="check-scale-legend">
+        <span class="csl-item"><span class="csl-dot" style="background:var(--s3)"></span>Trifft nicht zu</span>
+        <span class="csl-item"><span class="csl-dot" style="background:var(--a4)"></span>Selten</span>
+        <span class="csl-item"><span class="csl-dot" style="background:var(--a2)"></span>Oft</span>
+        <span class="csl-item"><span class="csl-dot" style="background:var(--a1)"></span>Fast immer</span>
+      </div>
+    </div>
+
+    <div id="part1Questions"></div>
+
+    <button class="btnp" onclick="submitPart1()" style="margin-bottom:16px">
+      Weiter zu Teil 2 →
+    </button>
+  </div>
+
+  <!-- TEIL 2 -->
+  <div id="checkPart2" style="display:none">
+    <div class="card">
+      <div class="ct">📋 Teil 2 – Vertiefung</div>
+      <p style="font-size:.83rem;color:var(--tm);line-height:1.6;margin-bottom:12px">
+        Dieser Teil vertieft die Selbsteinschätzung mit weiteren Aspekten. Bewerte wie stark die Aussagen <strong style="color:var(--tx)">in letzter Zeit</strong> auf dich zutreffen.
+      </p>
+      <div class="check-scale-legend">
+        <span class="csl-item"><span class="csl-dot" style="background:var(--s3)"></span>Überhaupt nicht</span>
+        <span class="csl-item"><span class="csl-dot" style="background:var(--a4)"></span>Ein wenig</span>
+        <span class="csl-item"><span class="csl-dot" style="background:var(--a2)"></span>Stark/häufig</span>
+        <span class="csl-item"><span class="csl-dot" style="background:var(--a1)"></span>Sehr stark</span>
+      </div>
+    </div>
+
+    <div id="part2Questions"></div>
+
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <button class="bttg" style="flex:1" onclick="backToPart1()">← Zurück</button>
+      <button class="btnp" style="flex:2" onclick="submitPart2()">Auswertung anzeigen →</button>
+    </div>
+  </div>
+
+  <!-- ERGEBNIS -->
+  <div id="checkResult" style="display:none">
+    <div class="card" style="text-align:center;padding:20px">
+      <div style="font-size:2.5rem;margin-bottom:8px" id="resultEmoji">🔎</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:1.4rem;margin-bottom:6px" id="resultTitle">Auswertung</div>
+      <div style="font-size:.83rem;color:var(--tm);line-height:1.6" id="resultSummary"></div>
+    </div>
+
+    <!-- BEREICHS-BALKEN -->
+    <div class="card">
+      <div class="ct">📊 Ausprägung je Bereich</div>
+      <div id="resultBars"></div>
+    </div>
+
+    <!-- HINWEISE JE BEREICH -->
+    <div class="card" id="resultHints">
+      <div class="ct">💡 Was das bedeuten kann</div>
+      <div id="resultHintContent"></div>
+    </div>
+
+    <!-- EMPFEHLUNG -->
+    <div class="card" style="border-left:3px solid var(--a1)" id="resultRecommendation">
+      <div class="ct">📍 Empfehlung</div>
+      <div id="resultRecContent" style="font-size:.85rem;color:var(--tm);line-height:1.7"></div>
+    </div>
+
+    <!-- DISCLAIMER UNTEN -->
+    <div class="card" style="background:rgba(161,37,27,.08);border:1px solid rgba(161,37,27,.2)">
+      <p style="font-size:.78rem;color:var(--tm);line-height:1.6">
+        ⚠️ Diese Auswertung ist keine Diagnose. ADHS kann nur durch eine qualifizierte Fachperson diagnostiziert werden – durch ausführliche Anamnese, klinisches Interview und ggf. neuropsychologische Testung. Bei Interesse an einer professionellen Abklärung wende dich an einen Psychiater, Psychologen oder eine spezielle ADHS-Ambulanz.
+      </p>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <button class="bttg" style="flex:1" onclick="resetCheck()">🔄 Neu starten</button>
+      <button class="btnp" style="flex:2" onclick="saveCheckResult()">💾 Ergebnis speichern</button>
+    </div>
+
+    <!-- GESPEICHERTE ERGEBNISSE -->
+    <div class="card" id="savedResultsCard" style="display:none">
+      <div class="ct">📅 Gespeicherte Auswertungen</div>
+      <div id="savedResultsList"></div>
+    </div>
+  </div>
+
 </div>
 
 </main>
@@ -626,6 +745,7 @@
   <button class="nb" onclick="showS('ach',this)"><span class="ni">🏆</span>Erfolge</button>
   <button class="nb" onclick="showS('strat',this)"><span class="ni">🧠</span>Strategien</button>
   <button class="nb" onclick="showS('info',this)"><span class="ni">📚</span>Wissen</button>
+  <button class="nb" onclick="showS('check',this)"><span class="ni">🔎</span>Selbstcheck</button>
 </nav>
 </div>
 

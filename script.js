@@ -955,6 +955,433 @@ function load() {
 }
 
 // ═══════════════════════════════════════════
+// SELBSTCHECK
+// ═══════════════════════════════════════════
+
+var CHECK_P1 = [
+  // Unaufmerksamkeit (Items 1-9 ADHS-SB angelehnt)
+  { id:'p1_1',  cat:'Unaufmerksamkeit', text:'Ich bin unaufmerksam gegenüber Details oder mache Flüchtigkeitsfehler bei der Arbeit.' },
+  { id:'p1_2',  cat:'Unaufmerksamkeit', text:'Es fällt mir schwer, bei Aufgaben oder Aktivitäten konzentriert zu bleiben.' },
+  { id:'p1_3',  cat:'Unaufmerksamkeit', text:'Ich höre Gesprächspartnern nicht richtig zu.' },
+  { id:'p1_4',  cat:'Unaufmerksamkeit', text:'Ich habe Schwierigkeiten, Aufgaben so auszuführen wie erklärt oder angewiesen.' },
+  { id:'p1_5',  cat:'Unaufmerksamkeit', text:'Es fällt mir schwer, Aufgaben, Vorhaben oder Aktivitäten zu organisieren.' },
+  { id:'p1_6',  cat:'Unaufmerksamkeit', text:'Ich gehe Aufgaben, die geistige Anstrengung erfordern, am liebsten aus dem Weg.' },
+  { id:'p1_7',  cat:'Unaufmerksamkeit', text:'Ich verlege oder verliere wichtige Gegenstände (z.B. Schlüssel, Handy, Dokumente).' },
+  { id:'p1_8',  cat:'Unaufmerksamkeit', text:'Ich lasse mich bei Tätigkeiten leicht ablenken.' },
+  { id:'p1_9',  cat:'Unaufmerksamkeit', text:'Ich vergesse Verabredungen, Termine oder wichtige Aufgaben.' },
+  // Hyperaktivität (Items 10-14)
+  { id:'p1_10', cat:'Hyperaktivität', text:'Ich bin zappelig oder fühle mich innerlich unruhig.' },
+  { id:'p1_11', cat:'Hyperaktivität', text:'Es fällt mir schwer, längere Zeit ruhig zu sitzen (z.B. bei Meetings, im Kino).' },
+  { id:'p1_12', cat:'Hyperaktivität', text:'Ich fühle mich innerlich unruhig oder angespannt.' },
+  { id:'p1_13', cat:'Hyperaktivität', text:'Ich kann mich schlecht leise oder ruhig beschäftigen.' },
+  { id:'p1_14', cat:'Hyperaktivität', text:'Ich bin ständig auf Achse und fühle mich wie von einem Motor angetrieben.' },
+  // Impulsivität (Items 15-18)
+  { id:'p1_15', cat:'Impulsivität', text:'Mir fällt es schwer abzuwarten – ich falle anderen ins Wort oder beende Sätze.' },
+  { id:'p1_16', cat:'Impulsivität', text:'Ich bin ungeduldig und kann schlecht warten (z.B. in der Schlange, im Gespräch).' },
+  { id:'p1_17', cat:'Impulsivität', text:'Ich unterbreche oder störe andere bei dem, was sie gerade tun.' },
+  { id:'p1_18', cat:'Impulsivität', text:'Ich rede viel, auch wenn die Situation es nicht erfordert.' },
+  // Validierung (Items 19-22)
+  { id:'p1_19', cat:'Verlauf', text:'Diese Schwierigkeiten hatte ich bereits in der Schul- oder Jugendzeit.' },
+  { id:'p1_20', cat:'Verlauf', text:'Diese Schwierigkeiten zeigen sich nicht nur bei der Arbeit, sondern auch privat.' },
+  { id:'p1_21', cat:'Verlauf', text:'Ich leide unter diesen Schwierigkeiten.' },
+  { id:'p1_22', cat:'Verlauf', text:'Diese Schwierigkeiten haben mir im Beruf oder in Beziehungen Probleme bereitet.' }
+];
+
+var CHECK_P2 = [
+  // Unaufmerksamkeit
+  { id:'p2_1',  cat:'Unaufmerksamkeit', text:'Ich habe Schwierigkeiten, meine Aufmerksamkeit bei der Arbeit aufrechtzuerhalten.' },
+  { id:'p2_2',  cat:'Unaufmerksamkeit', text:'Dinge, die ich sehe oder höre, lenken mich leicht von dem ab, was ich gerade tue.' },
+  { id:'p2_3',  cat:'Unaufmerksamkeit', text:'Im Alltag bin ich vergesslich.' },
+  { id:'p2_4',  cat:'Unaufmerksamkeit', text:'Ich habe Schwierigkeiten, mehrere Dinge gleichzeitig im Blick zu behalten.' },
+  { id:'p2_5',  cat:'Unaufmerksamkeit', text:'Ich kann mich nur schwer konzentrieren, außer wenn etwas wirklich interessant ist.' },
+  { id:'p2_6',  cat:'Unaufmerksamkeit', text:'Ich bin schlecht organisiert.' },
+  { id:'p2_7',  cat:'Unaufmerksamkeit', text:'Ich verliere Dinge, die ich für Aufgaben oder Aktivitäten brauche.' },
+  { id:'p2_8',  cat:'Unaufmerksamkeit', text:'Ich habe Schwierigkeiten, mit einer Aufgabe zu beginnen.' },
+  // Hyperaktivität
+  { id:'p2_9',  cat:'Hyperaktivität', text:'Ich bin immer auf Achse, wie von einem Motor angetrieben.' },
+  { id:'p2_10', cat:'Hyperaktivität', text:'Ich kann nur schwer für sehr lange Zeit an einem Platz bleiben.' },
+  { id:'p2_11', cat:'Hyperaktivität', text:'Ich bin immer in Bewegung, auch wenn ich eigentlich ruhig sein sollte.' },
+  { id:'p2_12', cat:'Hyperaktivität', text:'Ich fühle mich innerlich unruhig, selbst wenn ich still sitze.' },
+  { id:'p2_13', cat:'Hyperaktivität', text:'Ich neige dazu, herumzurutschen oder zu zappeln.' },
+  // Impulsivität
+  { id:'p2_14', cat:'Impulsivität', text:'Ich platze mit Dingen heraus, ohne vorher nachzudenken.' },
+  { id:'p2_15', cat:'Impulsivität', text:'Ich sage Dinge, ohne darüber nachzudenken.' },
+  { id:'p2_16', cat:'Impulsivität', text:'Ich antworte auf Fragen, bevor diese zu Ende gestellt sind.' },
+  { id:'p2_17', cat:'Impulsivität', text:'Ich bin leicht aufbrausend oder reizbar.' },
+  { id:'p2_18', cat:'Impulsivität', text:'Viele Dinge können mich leicht irritieren.' },
+  // Emotionales Erleben
+  { id:'p2_19', cat:'Emotionales Erleben', text:'Ich bin übermäßig selbstkritisch.' },
+  { id:'p2_20', cat:'Emotionales Erleben', text:'Ich bin nicht selbstsicher.' },
+  { id:'p2_21', cat:'Emotionales Erleben', text:'Ich vermeide neue Herausforderungen, weil ich meinen Fähigkeiten nicht vertraue.' },
+  { id:'p2_22', cat:'Emotionales Erleben', text:'Mein Versagen in der Vergangenheit macht es mir schwer, an mich selbst zu glauben.' },
+  { id:'p2_23', cat:'Emotionales Erleben', text:'Ich wünschte, ich hätte mehr Vertrauen in meine Fähigkeiten.' },
+  { id:'p2_24', cat:'Emotionales Erleben', text:'Meine Launen sind unvorhersehbar und wechseln schnell.' },
+  { id:'p2_25', cat:'Emotionales Erleben', text:'Ich bin schnell gelangweilt.' },
+  // Alltag
+  { id:'p2_26', cat:'Unaufmerksamkeit', text:'Ich beende angefangene Tätigkeiten oft nicht.' },
+  { id:'p2_27', cat:'Unaufmerksamkeit', text:'Ich erledige Dinge oft nur unter hohem äußerem Termindruck.' },
+  { id:'p2_28', cat:'Hyperaktivität', text:'Ich suche mir schnelle, aufregende Aktivitäten.' }
+];
+
+var checkAnswers1 = {};
+var checkAnswers2 = {};
+
+var P1_LABELS = ['Trifft nicht zu', 'Selten', 'Oft', 'Fast immer'];
+var P2_LABELS = ['Überhaupt nicht', 'Ein wenig', 'Stark/häufig', 'Sehr stark'];
+
+// Render Fragen
+var CAT_META = {
+  'Unaufmerksamkeit':     { icon: '🎯', color: 'var(--a4)' },
+  'Hyperaktivität':       { icon: '⚡', color: 'var(--a2)' },
+  'Impulsivität':         { icon: '🌊', color: 'var(--a1)' },
+  'Emotionales Erleben':  { icon: '💭', color: 'var(--a5)' },
+  'Verlauf':              { icon: '📅', color: 'var(--tm)' }
+};
+
+function renderCheckQuestions(questions, answers, containerId, labels) {
+  var el = document.getElementById(containerId);
+  var html = '';
+  var currentCat = null;
+  var catCounts = {};
+
+  // Vorzählen pro Kategorie
+  questions.forEach(function(q) {
+    catCounts[q.cat] = (catCounts[q.cat] || 0) + 1;
+  });
+  var catSeen = {};
+
+  questions.forEach(function(q, idx) {
+    // Neuer Kategorie-Block
+    if (q.cat !== currentCat) {
+      currentCat = q.cat;
+      catSeen[q.cat] = 0;
+      var meta = CAT_META[q.cat] || { icon: '📋', color: 'var(--a4)' };
+      html += '<div class="cq-cat-header" style="border-left-color:' + meta.color + '">';
+      html += '<span class="cq-cat-icon">' + meta.icon + '</span>';
+      html += '<span class="cq-cat-title">' + q.cat + '</span>';
+      html += '<span class="cq-cat-count">' + catCounts[q.cat] + ' Fragen</span>';
+      html += '</div>';
+    }
+
+    catSeen[q.cat]++;
+    var answered = answers[q.id] !== undefined;
+    var qNumInCat = catSeen[q.cat];
+
+    html += '<div class="cq-card ' + (answered ? 'answered' : '') + '" id="cq-' + q.id + '">';
+    html += '<div class="cq-num">Frage ' + qNumInCat + ' / ' + catCounts[q.cat] + '</div>';
+    html += '<div class="cq-text">' + q.text + '</div>';
+    html += '<div class="cq-options">';
+
+    for (var v = 0; v < labels.length; v++) {
+      var sel = answers[q.id] === v ? ' sel-' + v : '';
+      html += '<button class="cq-opt' + sel + '" ';
+      html += 'onclick="selectAnswer(\'' + q.id + '\',' + v + ',\'' + containerId + '\')">';
+      html += '<span style="font-size:1rem;display:block;margin-bottom:2px">' + v + '</span>';
+      html += labels[v];
+      html += '</button>';
+    }
+
+    html += '</div></div>';
+  });
+
+  el.innerHTML = html;
+}
+
+function selectAnswer(qid, val, part) {
+  var isPart1 = part === 'part1Questions';
+  var answers = isPart1 ? checkAnswers1 : checkAnswers2;
+  var questions = isPart1 ? CHECK_P1 : CHECK_P2;
+  var labels = isPart1 ? P1_LABELS : P2_LABELS;
+
+  answers[qid] = val;
+
+  // Update this card visually
+  var card = document.getElementById('cq-' + qid);
+  if (card) {
+    card.classList.add('answered');
+    var opts = card.querySelectorAll('.cq-opt');
+    opts.forEach(function(opt, i) {
+      opt.className = 'cq-opt' + (i === val ? ' sel-' + val : '');
+    });
+  }
+
+  updateCheckProgress(questions, answers, isPart1);
+}
+
+function updateCheckProgress(questions, answers, isPart1) {
+  var done = Object.keys(answers).length;
+  // Count only relevant questions for current part
+  var relevant = isPart1 ? CHECK_P1.length : CHECK_P2.length;
+  var total = CHECK_P1.length + CHECK_P2.length;
+  var p1done = Object.keys(checkAnswers1).length;
+  var p2done = Object.keys(checkAnswers2).length;
+  var allDone = p1done + p2done;
+
+  document.getElementById('checkProgressCard').style.display = 'block';
+  var pct = Math.round((allDone / total) * 100);
+  document.getElementById('checkProgressBar').style.width = pct + '%';
+  document.getElementById('checkProgressPct').textContent = pct + '%';
+  document.getElementById('checkProgressLabel').textContent =
+    isPart1 ? ('Teil 1: ' + p1done + ' / ' + CHECK_P1.length + ' beantwortet')
+            : ('Teil 2: ' + p2done + ' / ' + CHECK_P2.length + ' beantwortet');
+}
+
+function submitPart1() {
+  var missing = CHECK_P1.filter(function(q) {
+    return checkAnswers1[q.id] === undefined;
+  });
+  if (missing.length > 0) {
+    showToast('⚠️ Noch ' + missing.length + ' Fragen offen!');
+    // Scroll to first unanswered
+    var firstMissing = document.getElementById('cq-' + missing[0].id);
+    if (firstMissing) firstMissing.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  document.getElementById('checkPart1').style.display = 'none';
+  document.getElementById('checkPart2').style.display = 'block';
+  renderCheckQuestions(CHECK_P2, checkAnswers2, 'part2Questions', P2_LABELS);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function backToPart1() {
+  document.getElementById('checkPart2').style.display = 'none';
+  document.getElementById('checkPart1').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function submitPart2() {
+  var missing = CHECK_P2.filter(function(q) {
+    return checkAnswers2[q.id] === undefined;
+  });
+  if (missing.length > 0) {
+    showToast('⚠️ Noch ' + missing.length + ' Fragen offen!');
+    var firstMissing = document.getElementById('cq-' + missing[0].id);
+    if (firstMissing) firstMissing.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  showCheckResult();
+}
+
+// ── AUSWERTUNG ──
+function calcCheckScores() {
+  var cats = {
+    'Unaufmerksamkeit': { sum: 0, max: 0 },
+    'Hyperaktivität':   { sum: 0, max: 0 },
+    'Impulsivität':     { sum: 0, max: 0 },
+    'Emotionales Erleben': { sum: 0, max: 0 },
+    'Verlauf':          { sum: 0, max: 0 }
+  };
+
+  CHECK_P1.forEach(function(q) {
+    var v = checkAnswers1[q.id];
+    if (v !== undefined && cats[q.cat]) {
+      cats[q.cat].sum += v;
+      cats[q.cat].max += 3;
+    }
+  });
+  CHECK_P2.forEach(function(q) {
+    var v = checkAnswers2[q.id];
+    if (v !== undefined && cats[q.cat]) {
+      cats[q.cat].sum += v;
+      cats[q.cat].max += 3;
+    }
+  });
+
+  var result = {};
+  Object.keys(cats).forEach(function(cat) {
+    var c = cats[cat];
+    result[cat] = c.max > 0 ? Math.round((c.sum / c.max) * 100) : 0;
+  });
+  return result;
+}
+
+function getLevel(pct) {
+  if (pct < 30) return 'low';
+  if (pct < 60) return 'mid';
+  return 'high';
+}
+
+function getLevelLabel(pct) {
+  if (pct < 30) return 'Gering';
+  if (pct < 60) return 'Mittel';
+  return 'Stark ausgeprägt';
+}
+
+function showCheckResult() {
+  document.getElementById('checkPart2').style.display = 'none';
+  document.getElementById('checkResult').style.display = 'block';
+  document.getElementById('checkProgressCard').style.display = 'none';
+
+  var scores = calcCheckScores();
+
+  // Overall assessment
+  var mainCats = ['Unaufmerksamkeit', 'Hyperaktivität', 'Impulsivität'];
+  var avg = 0;
+  mainCats.forEach(function(c) { avg += scores[c]; });
+  avg = Math.round(avg / 3);
+
+  var emoji, title, summary;
+  if (avg < 30) {
+    emoji = '✅';
+    title = 'Wenig Auffälligkeiten';
+    summary = 'In den Kernbereichen zeigen sich aktuell wenige typische ADHS-Muster. Das bedeutet nicht zwingend, dass keine ADHS vorliegt – es können auch ausgeprägte Kompensationsstrategien vorliegen.';
+  } else if (avg < 55) {
+    emoji = '🔶';
+    title = 'Einige Muster erkennbar';
+    summary = 'Es zeigen sich einige Muster, die typisch für ADHS sein können. Eine professionelle Abklärung könnte sinnvoll sein, insbesondere wenn du dich durch diese Schwierigkeiten belastet fühlst.';
+  } else {
+    emoji = '🔴';
+    title = 'Viele Muster stark ausgeprägt';
+    summary = 'Es zeigen sich viele und teils stark ausgeprägte Muster, die auf ADHS hinweisen können. Wir empfehlen eine professionelle Abklärung bei einem Psychiater oder einer ADHS-Ambulanz.';
+  }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultSummary').textContent = summary;
+
+  // Balken
+  var barsHtml = '';
+  var catIcons = {
+    'Unaufmerksamkeit': '🎯',
+    'Hyperaktivität': '⚡',
+    'Impulsivität': '🌊',
+    'Emotionales Erleben': '💭',
+    'Verlauf': '📅'
+  };
+  Object.keys(scores).forEach(function(cat) {
+    var pct = scores[cat];
+    var level = getLevel(pct);
+    var lbl = getLevelLabel(pct);
+    barsHtml += '<div class="result-bar-wrap">';
+    barsHtml += '<div class="rb-header">';
+    barsHtml += '<span class="rb-label">' + (catIcons[cat] || '') + ' ' + cat + '</span>';
+    barsHtml += '<span class="rb-pct">' + pct + '% – ' + lbl + '</span>';
+    barsHtml += '</div>';
+    barsHtml += '<div class="rb-track"><div class="rb-fill rb-' + level + '" style="width:' + pct + '%"></div></div>';
+    barsHtml += '</div>';
+  });
+  document.getElementById('resultBars').innerHTML = barsHtml;
+
+  // Hinweise
+  var hints = {
+    'Unaufmerksamkeit': {
+      low:  { title: 'Unaufmerksamkeit: Gering', text: 'Konzentration und Organisation bereiten dir aktuell wenig Probleme.' },
+      mid:  { title: 'Unaufmerksamkeit: Mittel', text: 'Du merkst, dass Fokus und Organisation manchmal anstrengend sind. Strategien wie Pomodoro oder ALPEN-Methode können helfen.' },
+      high: { title: 'Unaufmerksamkeit: Stark', text: 'Ablenkbarkeit, Vergesslichkeit und Organisationsprobleme scheinen deinen Alltag deutlich zu belasten. Das ist ein häufiges Kernmerkmal von ADHS.' }
+    },
+    'Hyperaktivität': {
+      low:  { title: 'Hyperaktivität: Gering', text: 'Innere Unruhe und Bewegungsdrang spielen aktuell eine geringe Rolle.' },
+      mid:  { title: 'Hyperaktivität: Mittel', text: 'Du erlebst manchmal innere Unruhe oder den Drang zur Bewegung. Regelmäßige Bewegung und Pausen können stark helfen.' },
+      high: { title: 'Hyperaktivität: Stark', text: 'Das Gefühl, ständig „auf Achse" zu sein und sich schwer beruhigen zu können, ist belastend und typisch für ADHS.' }
+    },
+    'Impulsivität': {
+      low:  { title: 'Impulsivität: Gering', text: 'Impulsives Verhalten zeigt sich aktuell kaum.' },
+      mid:  { title: 'Impulsivität: Mittel', text: 'Manchmal handelst oder sprichst du schneller als gewollt. Die Stopp-Technik und Impulskontroll-Übungen können hier helfen.' },
+      high: { title: 'Impulsivität: Stark', text: 'Impulsivität belastet dich im Alltag deutlich – im Gespräch, bei Entscheidungen oder im sozialen Miteinander.' }
+    },
+    'Emotionales Erleben': {
+      low:  { title: 'Emotionales Erleben: Stabil', text: 'Selbstzweifel und emotionale Schwankungen sind aktuell wenig ausgeprägt.' },
+      mid:  { title: 'Emotionales Erleben: Mittel', text: 'Du erlebst phasenweise Selbstzweifel oder Stimmungsschwankungen. Das ist bei ADHS häufig und gut behandelbar.' },
+      high: { title: 'Emotionales Erleben: Belastend', text: 'Starke Selbstkritik, Stimmungsschwankungen und Selbstzweifel können auf emotionale Dysregulation hinweisen – ein häufiges Begleitmerkmal bei ADHS.' }
+    },
+    'Verlauf': {
+      low:  { title: 'Verlauf: Aktuell begrenzt', text: 'Die Schwierigkeiten scheinen aktuell weniger ausgeprägt oder beeinträchtigen dich wenig.' },
+      mid:  { title: 'Verlauf: Vorhanden', text: 'Die Schwierigkeiten zeigen sich in mehreren Lebensbereichen und belasten dich.' },
+      high: { title: 'Verlauf: Durchgängig', text: 'Die Schwierigkeiten sind schon lange vorhanden, zeigen sich in vielen Lebensbereichen und belasten dich erheblich. Das ist ein wichtiger Hinweis für eine Fachperson.' }
+    }
+  };
+
+  var hintHtml = '';
+  Object.keys(scores).forEach(function(cat) {
+    var level = getLevel(scores[cat]);
+    var h = hints[cat][level];
+    hintHtml += '<div class="hint-item ' + level + '">';
+    hintHtml += '<div class="hint-title">' + h.title + '</div>';
+    hintHtml += '<div class="hint-text">' + h.text + '</div>';
+    hintHtml += '</div>';
+  });
+  document.getElementById('resultHintContent').innerHTML = hintHtml;
+
+  // Empfehlung
+  var rec = '';
+  if (avg < 30) {
+    rec = 'Aktuell zeigen sich wenige Muster. Wenn du trotzdem das Gefühl hast, dass etwas nicht stimmt, kann ein Gespräch mit einem Arzt oder Psychologen sinnvoll sein. Manchmal kompensieren Betroffene sehr stark, sodass Fragebögen die tatsächliche Belastung unterschätzen.';
+  } else if (avg < 55) {
+    rec = 'Einige Muster sind erkennbar. Wenn du dich durch diese Schwierigkeiten belastet fühlst, empfehlen wir ein Gespräch mit einem Psychiater oder einer ADHS-Ambulanz. Viele Menschen profitieren bereits von Psychoedukation und Strategien – unabhängig von einer formalen Diagnose.';
+  } else {
+    rec = 'Es zeigen sich viele und deutliche Muster. Wir empfehlen dringend eine professionelle Abklärung. Wende dich an einen Facharzt für Psychiatrie, einen Psychologen mit ADHS-Erfahrung oder eine spezialisierte ADHS-Ambulanz. Eine Diagnose öffnet Türen zu effektiver Behandlung und Unterstützung.';
+  }
+  document.getElementById('resultRecContent').textContent = rec;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  loadSavedResults();
+}
+
+function resetCheck() {
+  checkAnswers1 = {};
+  checkAnswers2 = {};
+  document.getElementById('checkResult').style.display = 'none';
+  document.getElementById('checkPart2').style.display = 'none';
+  document.getElementById('checkProgressCard').style.display = 'none';
+  document.getElementById('checkPart1').style.display = 'block';
+  renderCheckQuestions(CHECK_P1, checkAnswers1, 'part1Questions', P1_LABELS);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function saveCheckResult() {
+  var scores = calcCheckScores();
+  if (!S.checkResults) S.checkResults = [];
+  S.checkResults.unshift({
+    date: new Date().toLocaleDateString('de', { day:'2-digit', month:'2-digit', year:'numeric' }),
+    scores: scores
+  });
+  if (S.checkResults.length > 5) S.checkResults.pop();
+  save();
+  showToast('💾 Ergebnis gespeichert!');
+  loadSavedResults();
+}
+
+function loadSavedResults() {
+  var card = document.getElementById('savedResultsCard');
+  var list = document.getElementById('savedResultsList');
+  if (!S.checkResults || !S.checkResults.length) {
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'block';
+  var mainCats = ['Unaufmerksamkeit', 'Hyperaktivität', 'Impulsivität', 'Emotionales Erleben'];
+  var catColors = {
+    'Unaufmerksamkeit': 'var(--a4)',
+    'Hyperaktivität': 'var(--a2)',
+    'Impulsivität': 'var(--a1)',
+    'Emotionales Erleben': 'var(--a5)'
+  };
+  var html = '';
+  S.checkResults.forEach(function(r) {
+    html += '<div class="saved-entry">';
+    html += '<span class="saved-date">📅 ' + r.date + '</span>';
+    html += '<div class="saved-bars">';
+    mainCats.forEach(function(cat) {
+      var pct = r.scores[cat] || 0;
+      html += '<div style="flex:1;display:flex;flex-direction:column;gap:2px;align-items:center">';
+      html += '<div style="width:100%;height:6px;background:var(--s3);border-radius:3px;overflow:hidden">';
+      html += '<div style="width:' + pct + '%;height:100%;background:' + catColors[cat] + ';border-radius:3px"></div>';
+      html += '</div>';
+      html += '<span style="font-size:.58rem;color:var(--tm)">' + pct + '%</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+    html += '</div>';
+  });
+  list.innerHTML = html;
+}
+
+// Init check on first load
+function initCheck() {
+  renderCheckQuestions(CHECK_P1, checkAnswers1, 'part1Questions', P1_LABELS);
+}
+
+// ═══════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════
 window.addEventListener('load', function() {
@@ -971,5 +1398,6 @@ window.addEventListener('load', function() {
     renderInbox();
     startChecker();
     chkAch();
+    initCheck();
   }
 });
