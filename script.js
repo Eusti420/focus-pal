@@ -720,13 +720,18 @@ function updDP() {
 // ═══════════════════════════════════════════
 function chkAch() {
   var cs = document.querySelectorAll('#achg .ac');
-  if (S.totalDone >= 10 && cs[1]) cs[1].classList.replace('locked','unlocked');
-  if (S.streak >= 3 && cs[2]) cs[2].classList.replace('locked','unlocked');
-  if (S.xp >= 500 && cs[3]) cs[3].classList.replace('locked','unlocked');
-  if (S.totalDone >= 25 && cs[4]) cs[4].classList.replace('locked','unlocked');
-  if (S.level >= 10 && cs[5]) cs[5].classList.replace('locked','unlocked');
-  if (S.xp >= 2000 && cs[6]) cs[6].classList.replace('locked','unlocked');
-  if (S.prestige >= 1 && cs[7]) cs[7].classList.replace('locked','unlocked');
+  if (S.totalDone >= 10 && cs[1])  cs[1].classList.replace('locked','unlocked');
+  if (S.streak >= 3 && cs[2])      cs[2].classList.replace('locked','unlocked');
+  if (S.xp >= 500 && cs[3])        cs[3].classList.replace('locked','unlocked');
+  if (S.totalDone >= 25 && cs[4])  cs[4].classList.replace('locked','unlocked');
+  if (S.level >= 10 && cs[5])      cs[5].classList.replace('locked','unlocked');
+  if (S.xp >= 2000 && cs[6])       cs[6].classList.replace('locked','unlocked');
+  if (S.prestige >= 1 && cs[7])    cs[7].classList.replace('locked','unlocked');
+
+  // Neue Selbstcheck Achievements
+  var checks = S.checkResults ? S.checkResults.length : 0;
+  if (checks >= 1 && cs[8])  cs[8].classList.replace('locked','unlocked');
+  if (checks >= 3 && cs[9])  cs[9].classList.replace('locked','unlocked');
 }
 
 function updAch() {
@@ -734,21 +739,151 @@ function updAch() {
   var e = getEmoji(S.level);
   document.getElementById('scnum').textContent = S.xp;
   document.getElementById('achlv').textContent = 'Level ' + S.level + ' – ' + t + ' ' + e;
-  var curr = xpForLvl(S.level), next = xpForNext(S.level);
-  var pct = S.level >= MAX_LVL ? 100 : Math.min(100, Math.round(((S.xp-curr)/(next-curr))*100));
+
+  var curr = xpForLvl(S.level);
+  var next = xpForNext(S.level);
+  var pct  = S.level >= MAX_LVL
+    ? 100
+    : Math.min(100, Math.round(((S.xp - curr) / (next - curr)) * 100));
   document.getElementById('achxpb').style.width = pct + '%';
-  document.getElementById('achnxt').textContent = S.level >= MAX_LVL ? 'Max Level! Prestige wartet…' : (next - S.xp) + ' XP bis nächstes Level';
+  document.getElementById('achnxt').textContent = S.level >= MAX_LVL
+    ? 'Max Level! Prestige wartet…'
+    : (next - S.xp) + ' XP bis nächstes Level';
+
   document.getElementById('achpsb').classList.toggle('show', S.prestige > 0);
   document.getElementById('achpsbn').textContent = S.prestige;
+
   chkAch();
   renderMilestones();
+  renderCheckResultsInAch();
+
+  // XP Log
   var el = document.getElementById('xlog');
-  if (!S.xpLog.length) { el.innerHTML = '<div class="empty">Noch keine XP – leg los! 🚀</div>'; return; }
+  if (!S.xpLog.length) {
+    el.innerHTML = '<div class="empty">Noch keine XP – leg los! 🚀</div>';
+    return;
+  }
   var h = '';
   S.xpLog.forEach(function(e2) {
-    h += '<div class="li"><span class="lic">⭐</span><span class="lid">' + e2.desc + '</span><span class="lx">+' + e2.amt + '</span><span class="lt">' + e2.time + '</span></div>';
+    h += '<div class="li">';
+    h += '<span class="lic">⭐</span>';
+    h += '<span class="lid">' + e2.desc + '</span>';
+    h += '<span class="lx">+' + e2.amt + '</span>';
+    h += '<span class="lt">' + e2.time + '</span>';
+    h += '</div>';
   });
   el.innerHTML = h;
+}
+
+function renderCheckResultsInAch() {
+  var card = document.getElementById('checkResultsCard');
+  var list = document.getElementById('checkResultsList');
+  if (!S.checkResults || !S.checkResults.length) {
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'block';
+
+  var html = '';
+  S.checkResults.forEach(function(r, idx) {
+    // Gesamt-Schnitt der 3 Kernbereiche
+    var mainCats = ['Unaufmerksamkeit', 'Hyperaktivität', 'Impulsivität'];
+    var avg = 0;
+    mainCats.forEach(function(c) { avg += (r.scores[c] || 0); });
+    avg = Math.round(avg / 3);
+
+    var badgeColor = avg < 30
+      ? 'var(--a3)' : avg < 55
+      ? 'var(--a2)' : 'var(--a1)';
+    var badgeBg = avg < 30
+      ? 'rgba(107,203,119,.15)' : avg < 55
+      ? 'rgba(225,198,153,.15)' : 'rgba(161,37,27,.15)';
+    var badgeLabel = avg < 30
+      ? 'Wenig auffällig' : avg < 55
+      ? 'Einiges erkennbar' : 'Stark ausgeprägt';
+
+    // Aufklappbare Karte
+    html += '<div class="iacc" onclick="tgac(this)" style="margin-bottom:8px">';
+    html += '<div class="iah">';
+    html += '<span class="iai">📊</span>';
+    html += '<span class="iat">Auswertung vom ' + r.date + '</span>';
+    html += '<span class="iaa">›</span>';
+    html += '</div>';
+    html += '<div class="iab">';
+
+    // Badge
+    html += '<div style="margin-bottom:12px">';
+    html += '<span style="font-size:.78rem;font-weight:800;padding:4px 10px;border-radius:20px;';
+    html += 'color:' + badgeColor + ';background:' + badgeBg + '">';
+    html += badgeLabel + '</span>';
+    html += '</div>';
+
+    // Balken alle Kategorien
+    Object.keys(r.scores).forEach(function(cat) {
+      if (cat === 'Verlauf') return;
+      var pct   = r.scores[cat];
+      var level = pct < 30 ? 'low' : pct < 60 ? 'mid' : 'high';
+      var lbl   = pct < 30 ? 'Gering' : pct < 60 ? 'Mittel' : 'Stark';
+      var cm    = CAT_COLORS_MAP[cat] || { color: 'var(--tm)' };
+      var icon  = (CAT_META[cat] || {}).icon || '📋';
+
+      html += '<div style="margin-bottom:10px">';
+      html += '<div style="display:flex;justify-content:space-between;margin-bottom:4px">';
+      html += '<span style="font-size:.82rem;font-weight:800">' + icon + ' ' + cat + '</span>';
+      html += '<span style="font-size:.74rem;font-weight:700;color:' + cm.color + '">';
+      html += pct + '% – ' + lbl + '</span>';
+      html += '</div>';
+      html += '<div style="height:9px;background:var(--s3);border-radius:4px;overflow:hidden">';
+      html += '<div class="rb-fill rb-' + level + '" style="width:' + pct + '%"></div>';
+      html += '</div>';
+      html += '</div>';
+    });
+
+    // Verlauf-Vergleich
+    if (idx < S.checkResults.length - 1) {
+      var prev = S.checkResults[idx + 1];
+      html += '<div style="background:var(--s3);border-radius:var(--rs);padding:10px;margin-top:4px">';
+      html += '<div style="font-size:.78rem;font-weight:800;margin-bottom:6px">📈 Vergleich zu ' + prev.date + '</div>';
+      mainCats.forEach(function(cat) {
+        var curr2 = r.scores[cat] || 0;
+        var old   = prev.scores[cat] || 0;
+        var diff  = curr2 - old;
+        var arrow = diff === 0 ? '→' : diff > 0 ? '↑' : '↓';
+        var col   = diff === 0
+          ? 'var(--tm)' : diff > 0
+          ? 'var(--a1)' : 'var(--a3)';
+        var diffStr = diff === 0
+          ? 'unverändert' : (diff > 0 ? '+' : '') + diff + '%';
+        html += '<div style="display:flex;justify-content:space-between;';
+        html += 'font-size:.76rem;padding:3px 0;border-bottom:1px solid var(--s2)">';
+        html += '<span style="color:var(--tm)">' + cat + '</span>';
+        html += '<span style="font-weight:800;color:' + col + '">' + arrow + ' ' + diffStr + '</span>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+
+    // Löschen
+    html += '<button onclick="deleteCheckResult(' + idx + ');event.stopPropagation()" ';
+    html += 'style="width:100%;margin-top:10px;padding:8px;';
+    html += 'background:rgba(161,37,27,.12);border:1px solid var(--a1);';
+    html += 'border-radius:var(--rs);color:var(--a1);';
+    html += 'font-family:Nunito,sans-serif;font-size:.8rem;font-weight:800;cursor:pointer">';
+    html += '🗑️ Löschen</button>';
+
+    html += '</div>'; // iab
+    html += '</div>'; // iacc
+  });
+
+  list.innerHTML = html;
+}
+
+function deleteCheckResult(idx) {
+  S.checkResults.splice(idx, 1);
+  save();
+  renderCheckResultsInAch();
+  chkAch();
+  showToast('🗑️ Auswertung gelöscht');
 }
 
 function renderMilestones() {
@@ -1487,7 +1622,6 @@ function showCheckResult() {
   document.getElementById('resultRecContent').textContent = rec;
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  loadSavedResults();
 }
 
 function resetCheck() {
@@ -1504,50 +1638,52 @@ function resetCheck() {
 function saveCheckResult() {
   var scores = calcCheckScores();
   if (!S.checkResults) S.checkResults = [];
+
   S.checkResults.unshift({
-    date: new Date().toLocaleDateString('de', { day:'2-digit', month:'2-digit', year:'numeric' }),
+    date: new Date().toLocaleDateString('de', {
+      day:'2-digit', month:'2-digit', year:'numeric'
+    }),
     scores: scores
   });
-  if (S.checkResults.length > 5) S.checkResults.pop();
+  if (S.checkResults.length > 10) S.checkResults.pop();
   save();
-  showToast('💾 Ergebnis gespeichert!');
-  loadSavedResults();
 }
 
-function loadSavedResults() {
-  var card = document.getElementById('savedResultsCard');
-  var list = document.getElementById('savedResultsList');
-  if (!S.checkResults || !S.checkResults.length) {
-    card.style.display = 'none';
-    return;
-  }
-  card.style.display = 'block';
-  var mainCats = ['Unaufmerksamkeit', 'Hyperaktivität', 'Impulsivität', 'Emotionales Erleben'];
-  var catColors = {
-    'Unaufmerksamkeit': 'var(--a4)',
-    'Hyperaktivität': 'var(--a2)',
-    'Impulsivität': 'var(--a1)',
-    'Emotionales Erleben': 'var(--a5)'
-  };
-  var html = '';
-  S.checkResults.forEach(function(r) {
-    html += '<div class="saved-entry">';
-    html += '<span class="saved-date">📅 ' + r.date + '</span>';
-    html += '<div class="saved-bars">';
-    mainCats.forEach(function(cat) {
-      var pct = r.scores[cat] || 0;
-      html += '<div style="flex:1;display:flex;flex-direction:column;gap:2px;align-items:center">';
-      html += '<div style="width:100%;height:6px;background:var(--s3);border-radius:3px;overflow:hidden">';
-      html += '<div style="width:' + pct + '%;height:100%;background:' + catColors[cat] + ';border-radius:3px"></div>';
-      html += '</div>';
-      html += '<span style="font-size:.58rem;color:var(--tm)">' + pct + '%</span>';
-      html += '</div>';
-    });
-    html += '</div>';
-    html += '</div>';
-  });
-  list.innerHTML = html;
+function saveAndGoToAch() {
+  saveCheckResult();
+
+  // XP vergeben
+  var isFirst = S.checkResults.length === 1;
+  var xpAmount = isFirst ? 100 : 50;
+  var xpLabel  = isFirst
+    ? '🔎 Ersten Selbstcheck abgeschlossen!'
+    : '🔎 Selbstcheck abgeschlossen';
+  addXP(xpAmount, xpLabel);
+
+  // Inbox Nachricht
+  addInbox(
+    '🔎 Selbstcheck gespeichert',
+    'Deine Auswertung vom ' +
+    S.checkResults[0].date +
+    ' wurde in den Erfolgen gespeichert. +' + xpAmount + ' XP!'
+  );
+
+  showToast('💾 Gespeichert! +' + xpAmount + ' XP');
+
+  // Zu Erfolge navigieren
+  setTimeout(function() {
+    var achBtn = document.querySelector('.nb[onclick*="ach"]');
+    if (achBtn) showS('ach', achBtn);
+  }, 800);
 }
+
+var CAT_COLORS_MAP = {
+  'Unaufmerksamkeit':    { color: 'var(--a4)', hex: '#4d96ff' },
+  'Hyperaktivität':      { color: 'var(--a2)', hex: '#e1c699' },
+  'Impulsivität':        { color: 'var(--a1)', hex: '#a1251b' },
+  'Emotionales Erleben': { color: 'var(--a5)', hex: '#c77dff' },
+  'Verlauf':             { color: 'var(--tm)', hex: '#888888' }
+};
 
 // ═══════════════════════════════════════════
 // ICS KALENDER EXPORT

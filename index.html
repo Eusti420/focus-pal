@@ -313,6 +313,8 @@
       <div class="ac locked"><span class="ai">🏔️</span><div class="an">Gipfelstürmer</div><div class="ad">Level 10 erreicht</div></div>
       <div class="ac locked"><span class="ai">🌟</span><div class="an">Superstar</div><div class="ad">2000 XP gesammelt</div></div>
       <div class="ac locked"><span class="ai">✦</span><div class="an">Prestige I</div><div class="ad">Level 50 + Prestige</div></div>
+      <div class="ac locked"><span class="ai">🔎</span><div class="an">Selbstreflexion</div><div class="ad">Ersten Selbstcheck gespeichert</div></div>
+      <div class="ac locked"><span class="ai">🧬</span><div class="an">Tiefblick</div><div class="ad">3 Selbstchecks gespeichert</div></div>
     </div>
   </div>
   <div class="card">
@@ -322,6 +324,14 @@
   <div class="card">
     <div class="ct">📜 XP-Verlauf</div>
     <div class="xlog" id="xlog"><div class="empty">Noch keine XP – leg los! 🚀</div></div>
+    <!-- SELBSTCHECK AUSWERTUNGEN -->
+    <div class="card" id="checkResultsCard" style="display:none">
+      <div class="ct">🔎 Selbstcheck Auswertungen</div>
+      <div style="font-size:.78rem;color:var(--tm);margin-bottom:12px;line-height:1.5">
+        Tippe auf einen Eintrag für die vollständige Auswertung.
+      </div>
+      <div id="checkResultsList"></div>
+    </div>
   </div>
 </div>
 
@@ -778,9 +788,33 @@
     </div>
 
     <!-- GESPEICHERTE ERGEBNISSE -->
-    <div class="card" id="savedResultsCard" style="display:none">
-      <div class="ct">📅 Gespeicherte Auswertungen</div>
-      <div id="savedResultsList"></div>
+   
+    <!-- DETAIL MODAL für gespeicherte Ergebnisse -->
+    <div class="carryover-overlay" id="savedDetailOverlay">
+      <div class="carryover-sheet">
+        <div class="co-handle"></div>
+        <div class="co-header">
+          <div class="co-avatar-row">
+            <span style="font-size:1.8rem">📊</span>
+            <div class="co-message">
+              <div class="co-message-title" id="sdTitle">Auswertung vom</div>
+              <div class="co-message-sub" id="sdSub"></div>
+            </div>
+          </div>
+        </div>
+        <div class="co-list" id="sdContent"></div>
+        <div class="co-footer">
+          <!-- Aktions-Buttons nach Auswertung -->
+          <div style="display:flex;gap:8px;margin-bottom:16px">
+            <button class="bttg" style="flex:1" onclick="resetCheck()">
+              🔄 Neu starten
+            </button>
+            <button class="btnp" style="flex:2" onclick="saveAndGoToAch()">
+              💾 Speichern & XP kassieren!
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 

@@ -910,19 +910,69 @@ button, .avo, .foo, .qwi, .tdi.tap, .nb, .scc, .iacc, .stb, .tbtn, .tbtn2, .npta
 .hint-title { font-weight: 800; font-size: .84rem; margin-bottom: 4px; }
 .hint-text  { font-size: .79rem; color: var(--tm); line-height: 1.6; }
 
-/* Gespeicherte Ergebnisse */
+/* Gespeicherte Ergebnis-Einträge */
 .saved-entry {
   background: var(--s2);
   border-radius: var(--rs);
-  padding: 10px 12px;
-  margin-bottom: 7px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all .2s;
+  touch-action: manipulation;
+}
+.saved-entry:active { border-color: var(--a2); transform: scale(.98); }
+.saved-entry-header {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
-.saved-date { font-size: .72rem; color: var(--tm); font-weight: 700; flex-shrink: 0; }
-.saved-bars { flex: 1; display: flex; gap: 4px; }
-.saved-mini-bar {
-  flex: 1; height: 6px;
+.saved-entry-date {
+  font-size: .78rem;
+  color: var(--tm);
+  font-weight: 700;
+}
+.saved-entry-badge {
+  font-size: .72rem;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+.saved-entry-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.saved-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.saved-bar-label {
+  font-size: .7rem;
+  color: var(--tm);
+  font-weight: 700;
+  width: 130px;
+  flex-shrink: 0;
+}
+.saved-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--s3);
   border-radius: 3px;
+  overflow: hidden;
+}
+.saved-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width .6s ease;
+}
+.saved-bar-pct {
+  font-size: .68rem;
+  color: var(--tm);
+  font-weight: 700;
+  width: 30px;
+  text-align: right;
+  flex-shrink: 0;
 }
