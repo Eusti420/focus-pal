@@ -32,6 +32,28 @@
   </div>
 </div>
 
+<!-- ── CARRY-OVER MODAL ── -->
+<div class="carryover-overlay" id="carryoverOverlay">
+  <div class="carryover-sheet">
+    <div class="co-handle"></div>
+    <div class="co-header">
+      <div class="co-avatar-row">
+        <span class="co-avatar" id="coAvatar">🦊</span>
+        <div class="co-message">
+          <div class="co-message-title" id="coTitle">Gestern war viel los!</div>
+          <div class="co-message-sub" id="coSub">Kein Problem – was machen wir damit?</div>
+        </div>
+        <span class="co-count-badge" id="coBadge">0 offen</span>
+      </div>
+    </div>
+    <div class="co-list" id="coList"></div>
+    <div class="co-footer">
+      <button class="bttg" style="flex:1" onclick="coSkipAll()">Alle ignorieren</button>
+      <button class="btnp" style="flex:2" onclick="coMoveAll()">Alle auf heute →</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── TOAST ── -->
 <div class="toast" id="toast"></div>
 
@@ -137,6 +159,33 @@
           </div>
           <button class="btnrem" onclick="addRem()">Speichern</button>
         </div>
+        <!-- ICS Export -->
+      <div id="icsExportWrap" style="margin-bottom:11px;display:none">
+        <button onclick="generateICS()" style="
+          width:100%;
+          padding:11px;
+          background:rgba(225,198,153,.1);
+          border:2px solid var(--a2);
+          border-radius:var(--rs);
+          color:var(--a2);
+          font-family:'Nunito',sans-serif;
+          font-size:.85rem;
+          font-weight:800;
+          cursor:pointer;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          gap:8px;
+          touch-action:manipulation;
+        ">
+          📅 Alle Erinnerungen in Kalender exportieren
+        </button>
+        <div style="font-size:.72rem;color:var(--tm);text-align:center;margin-top:5px;line-height:1.5">
+          Öffnet die .ics Datei in deinem Kalender-App →<br>
+          iOS: Dateien App → Öffnen mit Kalender<br>
+          Android: Direkt in Google Kalender importieren
+        </div>
+      </div>
         <div id="remList"></div>
       </div>
       <div id="npt-mot" style="display:none">

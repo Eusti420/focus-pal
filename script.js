@@ -442,10 +442,15 @@ function checkDailyReset() {
     S.lastActive = today;
   } else if (S.lastActive !== today) {
     var prev = new Date(S.lastActive);
-    var now = new Date(today);
-    var diff = Math.round((now - prev) / 86400000);
+    var now2 = new Date(today);
+    var diff = Math.round((now2 - prev) / 86400000);
     S.streak = diff === 1 ? S.streak + 1 : 1;
     S.lastActive = today;
+  }
+
+  // Carry-over BEVOR reset – unerledigte sammeln
+  if (S.lastDayReset && S.lastDayReset !== today) {
+    buildCarryOver();
   }
 
   // Daily QW reset
@@ -458,15 +463,169 @@ function checkDailyReset() {
   // Daily todo reset
   if (S.lastDayReset !== today) {
     S.lastDayReset = today;
-    S.todos.forEach(function(t) { if (t.scope === 'day') t.done = false; });
+    S.todos.forEach(function(t) {
+      if (t.scope === 'day') t.done = false;
+    });
   }
 
-  // Weekly todo reset (Monday)
+  // Weekly todo reset
   if (S.lastWeekReset !== mon) {
     S.lastWeekReset = mon;
-    S.todos.forEach(function(t) { if (t.scope === 'week') t.done = false; });
+    S.todos.forEach(function(t) {
+      if (t.scope === 'week') t.done = false;
+    });
   }
 
+  save();
+}
+
+// ═══════════════════════════════════════════
+// CARRY-OVER – unerledigte Todos vom Vortag
+// ═══════════════════════════════════════════
+
+var CO_MESSAGES = [
+  'Gestern war viel los – kein Problem!',
+  'Manchmal läuft der Tag anders als geplant.',
+  'Nicht geschafft? Macht nichts – neuer Tag, neue Chance!',
+  'Dein Gehirn hat gestern sein Bestes gegeben. 💪',
+  'Jeder Tag ist ein Neustart!'
+];
+
+function checkCarryOver() {
+  // Wurden Todos beim Reset auf done:false gesetzt aber nicht neu erstellt?
+  // Wir schauen ob es Todos gibt die gestern waren und nicht erledigt wurden
+  var yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  var yesterdayStr = yesterday.toDateString();
+
+  // Todos die scope:'day' haben, nicht erledigt sind und deren
+  // lastResetDate gestern war
+  var carryTodos = S.todos.filter(function(t) {
+    return t.scope === 'day' && !t.done && t.createdDate && t.createdDate !== new Date().toDateString();
+  });
+
+  // Simpler Ansatz: nach dem daily reset gibt es unerledigte day-todos
+  // die vom Vortag stammen – wir tracken das über ein Flag
+  if (!S.pendingCarryOver || !S.pendingCarryOver.length) return;
+
+  showCarryOver(S.pendingCarryOver);
+}
+
+function buildCarryOver() {
+  // Wird in checkDailyReset aufgerufen BEVOR todos resettet werden
+  var undone = S.todos.filter(function(t) {
+    return t.scope === 'day' && !t.done;
+  });
+  if (undone.length > 0) {
+    S.pendingCarryOver = undone.map(function(t) {
+      return { id: t.id, text: t.text, cat: t.cat, diff: t.diff };
+    });
+  } else {
+    S.pendingCarryOver = [];
+  }
+}
+
+function showCarryOver(items) {
+  if (!items || !items.length) return;
+
+  document.getElementById('coAvatar').textContent = S.avatar.emoji;
+  document.getElementById('coBadge').textContent = items.length + ' offen';
+
+  var msg = CO_MESSAGES[Math.floor(Math.random() * CO_MESSAGES.length)];
+  document.getElementById('coTitle').textContent = msg;
+  document.getElementById('coSub').textContent =
+    items.length + ' Aufgabe' + (items.length > 1 ? 'n' : '') +
+    ' von gestern – was soll damit passieren?';
+
+  var html = '';
+  items.forEach(function(t) {
+    var catColor = { focus:'var(--a4)', home:'var(--a3)', health:'var(--a1)', social:'var(--a5)', work:'var(--a2)' };
+    html += '<div class="co-item" style="border-left-color:' + (catColor[t.cat] || 'var(--s3)') + '" id="co-item-' + t.id + '">';
+    html += '<div class="co-item-text">' + t.text + '</div>';
+    html += '<div class="co-item-actions">';
+    html += '<button class="co-btn co-btn-done" onclick="coMarkDone(' + t.id + ')">✓ War erledigt</button>';
+    html += '<button class="co-btn co-btn-move" onclick="coMoveOne(' + t.id + ')">→ Auf heute</button>';
+    html += '<button class="co-btn co-btn-del" onclick="coDeleteOne(' + t.id + ')">✕</button>';
+    html += '</div></div>';
+  });
+  document.getElementById('coList').innerHTML = html;
+  document.getElementById('carryoverOverlay').classList.add('show');
+}
+
+function coRemoveItem(id) {
+  var el = document.getElementById('co-item-' + id);
+  if (el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(30px)';
+    el.style.transition = 'all .25s ease';
+    setTimeout(function() { el.remove(); }, 250);
+  }
+  S.pendingCarryOver = (S.pendingCarryOver || []).filter(function(t) {
+    return t.id !== id;
+  });
+  var badge = document.getElementById('coBadge');
+  var remaining = document.querySelectorAll('[id^="co-item-"]').length - 1;
+  if (remaining <= 0) {
+    setTimeout(closeCarryOver, 300);
+  } else {
+    badge.textContent = remaining + ' offen';
+  }
+}
+
+function coMarkDone(id) {
+  // Rückwirkend als erledigt markieren – XP trotzdem geben
+  S.todos.forEach(function(t) {
+    if (t.id === id) { t.done = true; }
+  });
+  addXP(5, '✓ Nachträglich erledigt');
+  coRemoveItem(id);
+  save();
+}
+
+function coMoveOne(id) {
+  // Auf heute verschieben – done bleibt false
+  S.todos.forEach(function(t) {
+    if (t.id === id) {
+      t.done = false;
+      t.createdDate = new Date().toDateString();
+    }
+  });
+  coRemoveItem(id);
+  save();
+  showToast('→ Auf heute verschoben');
+}
+
+function coDeleteOne(id) {
+  S.todos = S.todos.filter(function(t) { return t.id !== id; });
+  coRemoveItem(id);
+  save();
+}
+
+function coMoveAll() {
+  (S.pendingCarryOver || []).forEach(function(ct) {
+    S.todos.forEach(function(t) {
+      if (t.id === ct.id) {
+        t.done = false;
+        t.createdDate = new Date().toDateString();
+      }
+    });
+  });
+  S.pendingCarryOver = [];
+  save();
+  closeCarryOver();
+  renderTodos('day');
+  showToast('→ Alle auf heute verschoben');
+}
+
+function coSkipAll() {
+  S.pendingCarryOver = [];
+  save();
+  closeCarryOver();
+}
+
+function closeCarryOver() {
+  document.getElementById('carryoverOverlay').classList.remove('show');
+  S.pendingCarryOver = [];
   save();
 }
 
@@ -720,22 +879,36 @@ function addRem() {
 }
 
 function renderRems() {
-  var el = document.getElementById('remList');
-  var rlab = {daily:'Täglich', weekdays:'Mo–Fr', weekly:'Wöchentlich', once:'Einmalig'};
+  var el   = document.getElementById('remList');
+  var wrap = document.getElementById('icsExportWrap');
+  var rlab = {
+    daily:'Täglich', weekdays:'Mo–Fr',
+    weekly:'Wöchentlich', once:'Einmalig'
+  };
+
   if (!S.reminders.length) {
     el.innerHTML = '<div class="empty">Noch keine Erinnerungen</div>';
+    wrap.style.display = 'none';
     return;
   }
+
+  // Export-Button nur zeigen wenn mind. 1 aktive Erinnerung
+  var hasActive = S.reminders.some(function(r) { return r.active; });
+  wrap.style.display = hasActive ? 'block' : 'none';
+
   var h = '';
   S.reminders.forEach(function(r) {
     h += '<div class="ritem ' + (r.active ? '' : 'paused') + '">';
     h += '<span class="ric">' + r.icon + '</span>';
-    h += '<div class="rinfo"><div class="rname">' + r.name + '</div><div class="rwhen">🕐 ' + r.time + ' – ' + rlab[r.repeat] + '</div></div>';
+    h += '<div class="rinfo">';
+    h += '<div class="rname">' + r.name + '</div>';
+    h += '<div class="rwhen">🕐 ' + r.time + ' – ' + rlab[r.repeat] + '</div>';
+    h += '</div>';
     h += '<div class="ract">';
     h += '<button class="rbtn rbtog" onclick="togRem(' + r.id + ')">' + (r.active ? '⏸' : '▶') + '</button>';
     h += '<button class="rbtn rbdel" onclick="delRem(' + r.id + ')">✕</button>';
-    h += '<button class="rbtn rbedit" onclick="editRem(' + r.id + ')">✏️</button>';
-    h += '</div></div>';
+    h += '</div>';
+    h += '</div>';
   });
   el.innerHTML = h;
 }
@@ -1376,6 +1549,147 @@ function loadSavedResults() {
   list.innerHTML = html;
 }
 
+// ═══════════════════════════════════════════
+// ICS KALENDER EXPORT
+// ═══════════════════════════════════════════
+
+function generateICS() {
+  if (!S.reminders || !S.reminders.length) {
+    showToast('⚠️ Keine aktiven Erinnerungen vorhanden');
+    return;
+  }
+
+  var active = S.reminders.filter(function(r) { return r.active; });
+  if (!active.length) {
+    showToast('⚠️ Keine aktiven Erinnerungen');
+    return;
+  }
+
+  var lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//FocusPal//ADHS Begleiter//DE',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'X-WR-CALNAME:FocusPal Erinnerungen',
+    'X-WR-TIMEZONE:Europe/Berlin'
+  ];
+
+  active.forEach(function(r) {
+    var uid = 'focuspal-' + r.id + '@focuspal.app';
+    var now = icsDateNow();
+    var times = r.time.split(':');
+    var hh = times[0];
+    var mm = times[1];
+
+    // Nächstes Datum berechnen
+    var nextDate = getNextOccurrence(r.repeat, hh, mm);
+    var dtstart = nextDate + 'T' + hh + mm + '00';
+    var dtend   = nextDate + 'T' + hh + mm + '00';
+
+    // RRULE je nach Wiederholung
+    var rrule = '';
+    if (r.repeat === 'daily') {
+      rrule = 'RRULE:FREQ=DAILY';
+    } else if (r.repeat === 'weekdays') {
+      rrule = 'RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR';
+    } else if (r.repeat === 'weekly') {
+      rrule = 'RRULE:FREQ=WEEKLY';
+    }
+    // 'once' → kein RRULE
+
+    lines.push('BEGIN:VEVENT');
+    lines.push('UID:' + uid);
+    lines.push('DTSTAMP:' + now);
+    lines.push('DTSTART;TZID=Europe/Berlin:' + dtstart);
+    lines.push('DTEND;TZID=Europe/Berlin:' + dtend);
+    lines.push('SUMMARY:' + r.icon + ' ' + r.name);
+    lines.push('DESCRIPTION:FocusPal Erinnerung – ' + r.name);
+    lines.push('CATEGORIES:FOCUSPAL');
+
+    // Alarm 0 Minuten vorher = genau zur Zeit
+    lines.push('BEGIN:VALARM');
+    lines.push('TRIGGER:PT0S');
+    lines.push('ACTION:DISPLAY');
+    lines.push('DESCRIPTION:' + r.icon + ' ' + r.name);
+    lines.push('END:VALARM');
+
+    // Zweiter Alarm mit Sound
+    lines.push('BEGIN:VALARM');
+    lines.push('TRIGGER:PT0S');
+    lines.push('ACTION:AUDIO');
+    lines.push('END:VALARM');
+
+    if (rrule) lines.push(rrule);
+    lines.push('END:VEVENT');
+  });
+
+  lines.push('END:VCALENDAR');
+
+  var icsContent = lines.join('\r\n');
+  downloadICS(icsContent, 'focuspal-erinnerungen.ics');
+  showToast('📅 Kalender-Datei exportiert!');
+}
+
+function getNextOccurrence(repeat, hh, mm) {
+  var now = new Date();
+  var d = new Date();
+
+  if (repeat === 'weekly') {
+    // Nächsten Montag finden
+    var day = d.getDay();
+    var daysUntilMon = day === 1 ? 0 : (8 - day) % 7 || 7;
+    d.setDate(d.getDate() + daysUntilMon);
+  } else if (repeat === 'weekdays') {
+    // Nächsten Wochentag finden
+    var wd = d.getDay();
+    if (wd === 0) d.setDate(d.getDate() + 1); // Sonntag → Montag
+    if (wd === 6) d.setDate(d.getDate() + 2); // Samstag → Montag
+  }
+  // daily / once → heute oder morgen
+  // Wenn Uhrzeit heute schon vorbei → morgen
+  var targetHour = parseInt(hh, 10);
+  var targetMin  = parseInt(mm, 10);
+  if (
+    repeat === 'daily' || repeat === 'once'
+  ) {
+    if (
+      now.getHours() > targetHour ||
+      (now.getHours() === targetHour && now.getMinutes() >= targetMin)
+    ) {
+      d.setDate(d.getDate() + 1);
+    }
+  }
+
+  var y = d.getFullYear();
+  var mo = String(d.getMonth() + 1).padStart(2, '0');
+  var da = String(d.getDate()).padStart(2, '0');
+  return y + '' + mo + '' + da;
+}
+
+function icsDateNow() {
+  var d = new Date();
+  var y  = d.getUTCFullYear();
+  var mo = String(d.getUTCMonth() + 1).padStart(2, '0');
+  var da = String(d.getUTCDate()).padStart(2, '0');
+  var hh = String(d.getUTCHours()).padStart(2, '0');
+  var mm = String(d.getUTCMinutes()).padStart(2, '0');
+  var ss = String(d.getUTCSeconds()).padStart(2, '0');
+  return y + mo + da + 'T' + hh + mm + ss + 'Z';
+}
+
+function downloadICS(content, filename) {
+  var blob = new Blob([content], { type: 'text/calendar;charset=utf-8' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href     = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 // Init check on first load
 function initCheck() {
   renderCheckQuestions(CHECK_P1, checkAnswers1, 'part1Questions', P1_LABELS);
@@ -1389,6 +1703,9 @@ window.addEventListener('load', function() {
     document.getElementById('ob').style.display = 'none';
     document.getElementById('app').classList.add('show');
     checkDailyReset();
+    setTimeout(function() {
+    checkCarryOver();
+    }, 800);
     updateUI();
     renderTodos('day');
     restoreQWUI();
