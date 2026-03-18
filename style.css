@@ -122,6 +122,11 @@ input[type="time"] { -webkit-appearance: none; }
   justify-content:center; font-size:1.2rem;
   border:2px solid var(--a5); flex-shrink:0;
 }
+
+.mav:hover {
+  border-color:var(--a2);
+}
+
 .tinfo { flex:1; min-width:0; }
 .tname { font-weight:800; font-size:.86rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .tlvl { font-size:.65rem; color:var(--a2); font-weight:700; }
@@ -143,6 +148,11 @@ input[type="time"] { -webkit-appearance: none; }
   touch-action:manipulation;
   pointer-events:auto;
 }
+
+.nbtn:hover {
+  border: 2px solid var(--a2);
+}
+
 .nbtn:active { background:var(--s3); }
 .ndot {
   position:absolute; top:3px; right:3px;
@@ -169,6 +179,8 @@ nav {
   user-select:none;
 }
 .nb .ni { font-size:1.25rem; display:block; transition:transform .15s; }
+.nb:hover { color:var(--a2) }
+
 .nb:active .ni { transform:scale(.85); }
 .nb.act { color:var(--a5); }
 .nb.act::before {
