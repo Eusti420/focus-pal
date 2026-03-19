@@ -1109,12 +1109,14 @@ function tgac(el) { el.classList.toggle('open'); }
 
 // Mythen aufklappen
 function togMyth(header) {
+  event.stopPropagation();
   var card = header.parentElement;
   card.classList.toggle('open');
 }
 
 // Masking Checkboxen
 function togEduCheck(item, key) {
+  event.stopPropagation();
   var box = document.getElementById(key + '_box');
   var isChecked = box.classList.contains('checked');
 
@@ -1126,13 +1128,10 @@ function togEduCheck(item, key) {
     box.textContent = '✓';
   }
 
-  // Speichern
   if (!S.eduData) S.eduData = {};
   if (!S.eduData.masking) S.eduData.masking = {};
   S.eduData.masking[key] = !isChecked;
   save();
-
-  // Ergebnis anzeigen
   updateMaskingResult();
 }
 
